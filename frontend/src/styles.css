@@ -48,6 +48,12 @@ body {
   overflow-x: hidden;
 }
 
+app-root {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
 /* Glassmorphism Utilities */
 .glass-panel {
   background: var(--surface-color);
