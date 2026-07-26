@@ -18,4 +18,10 @@
       <p>Nenhum hábito cadastrado ainda.</p>
     </div>
   </ng-template>
+
+  <app-habit-form-modal
+    *ngIf="showModal"
+    (closeEvent)="closeModal()"
+    (saveEvent)="onSaveHabit($event)">
+  </app-habit-form-modal>
 </div>
