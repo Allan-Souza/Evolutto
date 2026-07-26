@@ -6,11 +6,12 @@ import { CreateRewardRequest, RewardItem, ShopResponse, ShopStatus } from '../..
 import { RewardCardComponent } from '../reward-card/reward-card.component';
 import { ToastService } from '../../../../core/services/toast.service';
 import { RewardFormModalComponent } from '../reward-form-modal/reward-form-modal.component';
+import { NgIconComponent } from '@ng-icons/core';
 
 @Component({
   selector: 'app-shop-board',
   standalone: true,
-  imports: [CommonModule, RewardCardComponent, RewardFormModalComponent],
+  imports: [CommonModule, RewardCardComponent, RewardFormModalComponent, NgIconComponent],
   templateUrl: './shop-board.component.html',
   styleUrls: ['./shop-board.component.css']
 })

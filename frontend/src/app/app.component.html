@@ -22,7 +22,7 @@
       </div>
 
       <div class="stat-item coins-badge">
-        <span class="coin-icon">🪙</span>
+        <span class="coin-icon"><ng-icon name="lucideCoins"></ng-icon></span>
         <span class="value">{{ userStore.currentCoins() }}</span>
       </div>
     </div>
@@ -40,19 +40,19 @@
   <!-- Bottom Navigation -->
   <nav class="bottom-nav glass-panel" *ngIf="authService.isAuthenticated()">
     <a routerLink="/habits" routerLinkActive="active-link" class="nav-item">
-      <span class="icon">📋</span>
+      <span class="icon"><ng-icon name="lucideListTodo"></ng-icon></span>
       <span>Hábitos</span>
     </a>
     <a routerLink="/shop" routerLinkActive="active-link" class="nav-item">
-      <span class="icon">🛍️</span>
+      <span class="icon"><ng-icon name="lucideShoppingBag"></ng-icon></span>
       <span>Lojinha</span>
     </a>
     <a routerLink="/social" routerLinkActive="active-link" class="nav-item">
-      <span class="icon">🏆</span>
+      <span class="icon"><ng-icon name="lucideTrophy"></ng-icon></span>
       <span>Social</span>
     </a>
     <a routerLink="/parental" routerLinkActive="active-link" class="nav-item">
-      <span class="icon">🛡️</span>
+      <span class="icon"><ng-icon name="lucideShield"></ng-icon></span>
       <span>Guardião</span>
     </a>
   </nav>

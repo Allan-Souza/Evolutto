@@ -6,11 +6,12 @@ import { AuthService } from './core/auth/auth.service';
 import { ToastService } from './core/services/toast.service';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { LevelUpModalComponent } from './shared/components/level-up-modal/level-up-modal.component';
+import { NgIconComponent } from '@ng-icons/core';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ToastComponent, LevelUpModalComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ToastComponent, LevelUpModalComponent, NgIconComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

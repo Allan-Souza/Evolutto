@@ -1,17 +1,20 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../../core/services/toast.service';
+import { NgIconComponent } from '@ng-icons/core';
 
 @Component({
   selector: 'app-toast',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgIconComponent],
   template: `
     <div class="toast-container">
       <div *ngFor="let toast of toastService.toasts()" 
            class="toast-message" 
            [ngClass]="toast.type">
-        {{ toast.message }}
+        <ng-icon *ngIf="toast.type === 'success'" name="lucideCheckCircle2" class="toast-icon"></ng-icon>
+        <ng-icon *ngIf="toast.type === 'danger'" name="lucideXCircle" class="toast-icon"></ng-icon>
+        <span>{{ toast.message }}</span>
       </div>
     </div>
   `,
@@ -36,6 +39,12 @@ import { ToastService } from '../../../core/services/toast.service';
       font-weight: 500;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
       animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .toast-icon {
+      font-size: 1.2rem;
     }
     .toast-message.success { border-bottom: 3px solid #10b981; }
     .toast-message.info { border-bottom: 3px solid #3b82f6; }
