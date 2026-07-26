@@ -12,6 +12,7 @@ import { AuthService } from '../../core/auth/auth.service';
       
       <div class="login-actions glass-panel">
         <button class="btn-primary" (click)="loginAsChild()">🎮 Entrar como Aventureiro</button>
+        <button class="btn-primary" (click)="loginAsSolo()" style="background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6;">🐺 Entrar como Lobo Solitário</button>
         <button class="btn-secondary" (click)="loginAsParent()">🛡️ Entrar como Guardião</button>
       </div>
     </div>
@@ -58,12 +59,17 @@ export class LoginComponent implements OnInit {
   }
 
   loginAsChild() {
-    this.auth.login('mock-token-child', 'STANDARD');
+    this.auth.login('mock-token-child', 'ADVENTURER');
+    this.router.navigate(['/habits']);
+  }
+
+  loginAsSolo() {
+    this.auth.login('mock-token-solo', 'SOLO');
     this.router.navigate(['/habits']);
   }
 
   loginAsParent() {
-    this.auth.login('mock-token-parent', 'PARENT');
+    this.auth.login('mock-token-parent', 'GUARDIAN');
     this.router.navigate(['/parental']);
   }
 }

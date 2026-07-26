@@ -50,7 +50,7 @@ export class HabitService {
     return of(newHabit).pipe(delay(800));
   }
 
-  executeHabit(habitId: string, currentXp: number, currentCoins: number, currentDebuff: number): Observable<ExecuteHabitResponse> {
+  executeHabit(habitId: string, currentXp: number, currentCoins: number, currentDebuff: number, role: string): Observable<ExecuteHabitResponse> {
     const habit = this.habits.find(h => h.id === habitId);
     if (!habit) throw new Error('Habit not found');
 
@@ -69,8 +69,15 @@ export class HabitService {
 
       if (newDebuff > 0) newDebuff--;
     } else {
-      // Hábito ruim aplica debuff (penalidade para os próximos 10)
-      newDebuff = 10;
+      // Hábito ruim
+      if (role === 'SOLO') {
+        // Modo Leve: perde XP e Moedas, sem debuff prolongado
+        xpRewarded = -10;
+        coinsRewarded = -10;
+      } else {
+        // Aventureiro: aplica debuff (penalidade para os próximos 10 hábitos bons)
+        newDebuff = 10;
+      }
     }
 
     const response: ExecuteHabitResponse = {

@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HabitService } from '../../services/habit.service';
 import { UserStoreService } from '../../../../core/store/user-store.service';
+import { AuthService } from '../../../../core/auth/auth.service';
 import { HabitResponse, HabitType, CreateHabitRequest } from '../../../../core/models/habit.model';
 import { HabitCardComponent } from '../habit-card/habit-card.component';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -21,6 +22,7 @@ export class HabitListComponent implements OnInit {
   
   private habitService = inject(HabitService);
   private userStore = inject(UserStoreService);
+  private authService = inject(AuthService);
   private toastService = inject(ToastService);
 
   ngOnInit(): void {
@@ -35,7 +37,8 @@ export class HabitListComponent implements OnInit {
       habitId, 
       this.userStore.currentXp(), 
       this.userStore.currentCoins(), 
-      this.userStore.debuffCounter()
+      this.userStore.debuffCounter(),
+      this.authService.currentRole()
     ).subscribe({
       next: (res) => {
         this.userStore.updateProgress(res.newTotalXp, res.newTotalCoins, res.currentDebuffCounter);
@@ -44,7 +47,11 @@ export class HabitListComponent implements OnInit {
         if (habit?.type === HabitType.GOOD) {
           this.toastService.show(`Você ganhou +${res.xpRewarded} XP!`, 'success');
         } else {
-          this.toastService.show(`Debuff aplicado! Penalidade ativada.`, 'danger');
+          if (this.authService.currentRole() === 'SOLO') {
+            this.toastService.show(`Você perdeu 10 XP e 10 Moedas!`, 'danger');
+          } else {
+            this.toastService.show(`Debuff aplicado! Penalidade ativada.`, 'danger');
+          }
         }
 
         this.loadingId = null;

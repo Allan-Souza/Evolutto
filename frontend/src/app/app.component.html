@@ -51,7 +51,7 @@
       <span class="icon"><ng-icon name="lucideTrophy"></ng-icon></span>
       <span>Social</span>
     </a>
-    <a routerLink="/parental" routerLinkActive="active-link" class="nav-item">
+    <a *ngIf="authService.hasRole('GUARDIAN')" routerLink="/parental" routerLinkActive="active-link" class="nav-item">
       <span class="icon"><ng-icon name="lucideShield"></ng-icon></span>
       <span>Guardião</span>
     </a>
