@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserStoreService } from './core/store/user-store.service';
+import { AuthService } from './core/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -12,4 +13,5 @@ import { UserStoreService } from './core/store/user-store.service';
 })
 export class AppComponent {
   userStore = inject(UserStoreService);
+  authService = inject(AuthService);
 }

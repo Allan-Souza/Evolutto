@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core'; // Forçando rebuild do Angular
 import { CommonModule } from '@angular/common';
 import { SocialService } from '../../services/social.service';
 import { LeaderboardResponse } from '../../../../core/models/social.model';

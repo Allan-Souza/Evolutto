@@ -1,7 +1,9 @@
 <div class="app-layout">
   
+  <div class="app-container">
+  
   <!-- Top Header (Stats) -->
-  <header class="app-header glass-panel">
+  <header class="app-header glass-panel" *ngIf="authService.isAuthenticated()">
     <div class="user-stats">
       <div class="stat-item level-badge">
         <span class="label">Lvl</span>
@@ -31,12 +33,12 @@
   </header>
 
   <!-- Main Content Route -->
-  <main class="app-content">
+  <main class="content-area" [class.no-auth]="!authService.isAuthenticated()">
     <router-outlet></router-outlet>
   </main>
 
   <!-- Bottom Navigation -->
-  <nav class="bottom-nav glass-panel">
+  <nav class="bottom-nav glass-panel" *ngIf="authService.isAuthenticated()">
     <a routerLink="/habits" routerLinkActive="active-link" class="nav-item">
       <span class="icon">📋</span>
       <span>Hábitos</span>
