@@ -1,0 +1,17 @@
+<div class="habit-card glass-panel animate-slide-up" [ngClass]="{'bad-habit': habit.type === HabitType.BAD}">
+  <div class="habit-info">
+    <h3 class="habit-title">{{ habit.title }}</h3>
+    <p class="habit-desc">{{ habit.description }}</p>
+    <div class="habit-meta">
+      <span class="difficulty-badge" [attr.data-diff]="habit.difficulty">{{ habit.difficulty }}</span>
+    </div>
+  </div>
+  
+  <button 
+    class="execute-btn" 
+    [ngClass]="{'btn-primary': habit.type === HabitType.GOOD, 'btn-danger': habit.type === HabitType.BAD}"
+    [disabled]="isLoading" 
+    (click)="execute.emit(habit.id)">
+    {{ isLoading ? '⏳' : (habit.type === HabitType.GOOD ? 'Feito' : 'Falhei') }}
+  </button>
+</div>

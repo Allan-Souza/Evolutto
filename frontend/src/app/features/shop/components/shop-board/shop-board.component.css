@@ -1,0 +1,40 @@
+.shop-board-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.frozen-warning {
+  padding: 16px;
+  background: rgba(59, 130, 246, 0.2);
+  border-left: 4px solid var(--primary-color);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.rewards-wrapper.frozen {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.empty-state {
+  padding: 32px;
+  text-align: center;
+  color: var(--text-secondary);
+}

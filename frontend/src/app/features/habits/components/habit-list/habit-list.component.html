@@ -1,0 +1,21 @@
+<div class="habit-list-container">
+  <div class="header-actions">
+    <h2>Meus Hábitos</h2>
+    <button class="btn-primary btn-sm">+ Novo</button>
+  </div>
+  
+  <div class="habits-wrapper" *ngIf="habits.length > 0; else noHabits">
+    <app-habit-card 
+      *ngFor="let habit of habits" 
+      [habit]="habit" 
+      [isLoading]="loadingId === habit.id"
+      (execute)="onExecute($event)">
+    </app-habit-card>
+  </div>
+  
+  <ng-template #noHabits>
+    <div class="empty-state glass-panel animate-slide-up">
+      <p>Nenhum hábito cadastrado ainda.</p>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,16 @@
+<div class="reward-card glass-panel animate-slide-up">
+  <div class="reward-info">
+    <h3 class="reward-title">{{ reward.title }}</h3>
+    <div class="reward-cost">
+      <span class="coin-icon">🪙</span>
+      <span class="cost-value" [class.insufficient]="!canAfford">{{ reward.cost }}</span>
+    </div>
+  </div>
+  
+  <button 
+    class="btn-primary buy-btn" 
+    [disabled]="!canAfford || isLoading"
+    (click)="buy.emit(reward.id)">
+    {{ isLoading ? '⏳' : 'Comprar' }}
+  </button>
+</div>

@@ -1,0 +1,37 @@
+.reward-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.reward-info {
+  flex: 1;
+}
+
+.reward-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.reward-cost {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cost-value {
+  font-weight: bold;
+  color: var(--warning-color);
+}
+
+.cost-value.insufficient {
+  color: var(--danger-color);
+}
+
+.buy-btn {
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}

@@ -1,2 +1,6 @@
 import { Routes } from '@angular/router';
-export const SHOP_ROUTES: Routes = [];
+import { ShopBoardComponent } from './components/shop-board/shop-board.component';
+
+export const SHOP_ROUTES: Routes = [
+  { path: '', component: ShopBoardComponent }
+];

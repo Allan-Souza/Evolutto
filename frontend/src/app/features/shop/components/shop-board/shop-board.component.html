@@ -1,0 +1,26 @@
+<div class="shop-board-container">
+  <div class="header-actions">
+    <h2>Lojinha</h2>
+    <button class="btn-primary btn-sm">+ Recompensa</button>
+  </div>
+  
+  <div *ngIf="status === ShopStatus.FROZEN" class="frozen-warning glass-panel">
+    ❄️ Sua Lojinha está congelada pelos seus pais. Cumpra uma missão de redenção para liberar!
+  </div>
+
+  <div class="rewards-wrapper" [class.frozen]="status === ShopStatus.FROZEN" *ngIf="rewards.length > 0; else noRewards">
+    <app-reward-card 
+      *ngFor="let reward of rewards" 
+      [reward]="reward" 
+      [canAfford]="userStore.currentCoins() >= reward.cost"
+      [isLoading]="loadingId === reward.id"
+      (buy)="onBuy($event)">
+    </app-reward-card>
+  </div>
+  
+  <ng-template #noRewards>
+    <div class="empty-state glass-panel animate-slide-up">
+      <p>Nenhuma recompensa cadastrada. Crie uma nova para se motivar!</p>
+    </div>
+  </ng-template>
+</div>
