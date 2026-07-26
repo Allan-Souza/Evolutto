@@ -1,12 +1,18 @@
 <div class="shop-board-container">
   <div class="header-actions">
     <h2>Lojinha</h2>
-    <button class="btn-primary btn-sm">+ Recompensa</button>
+    <button class="btn-primary btn-sm" (click)="openModal()">+ Novo</button>
   </div>
   
   <div *ngIf="status === ShopStatus.FROZEN" class="frozen-warning glass-panel">
     ❄️ Sua Lojinha está congelada pelos seus pais. Cumpra uma missão de redenção para liberar!
   </div>
+
+  <app-reward-form-modal
+    *ngIf="showModal"
+    (closeEvent)="closeModal()"
+    (saveEvent)="onSaveReward($event)">
+  </app-reward-form-modal>
 
   <div class="rewards-wrapper" [class.frozen]="status === ShopStatus.FROZEN" *ngIf="rewards.length > 0; else noRewards">
     <app-reward-card 
