@@ -1,0 +1,31 @@
+<div class="group-dashboard-container">
+  <div class="header-actions">
+    <h2>Amigos & Grupos</h2>
+    <button class="btn-primary btn-sm">+ Grupo</button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state glass-panel">
+    Carregando ranking... ⏳
+  </div>
+
+  <div *ngIf="!isLoading && groupData">
+    <div class="group-header glass-panel">
+      <h3>{{ groupData.groupName }}</h3>
+      <p class="group-desc">Ranking atualizado em tempo real. Não fique para trás!</p>
+      <button class="btn-primary invite-btn">🔗 Convidar Amigos</button>
+    </div>
+
+    <!-- Feed de Atividades Visual -->
+    <div class="social-feed glass-panel animate-slide-up">
+      <h4 class="feed-title">Feed de Atividades</h4>
+      <ul class="feed-list">
+        <li><strong>Alex</strong> concluiu "Estudar Programação". (+20 XP)</li>
+        <li><strong>Maria</strong> concluiu "Beber 2L de Água". (+10 XP)</li>
+        <li><strong>João</strong> registrou "Comer Fast Food". (Penalidade ativada!)</li>
+      </ul>
+    </div>
+
+    <!-- Tabela do Ranking -->
+    <app-leaderboard [ranking]="groupData.ranking"></app-leaderboard>
+  </div>
+</div>

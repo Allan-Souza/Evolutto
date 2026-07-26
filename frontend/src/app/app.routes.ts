@@ -15,6 +15,11 @@ export const routes: Routes = [
     loadChildren: () => import('./features/shop/shop.routes').then(m => m.SHOP_ROUTES),
     canActivate: [authGuard]
   },
+  {
+    path: 'social',
+    loadChildren: () => import('./features/social/social.routes').then(m => m.SOCIAL_ROUTES),
+    canActivate: [authGuard]
+  },
   { 
     path: 'parental', 
     loadChildren: () => import('./features/parental/parental.routes').then(m => m.PARENTAL_ROUTES),

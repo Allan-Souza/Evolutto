@@ -1,0 +1,29 @@
+<div class="leaderboard glass-panel animate-slide-up">
+  <h3>🏆 Ranking Semanal</h3>
+  
+  <div class="ranking-list">
+    <div *ngFor="let player of ranking" 
+         class="ranking-item"
+         [class.current-user]="player.userId === currentUserId"
+         [class.top-1]="player.position === 1"
+         [class.top-2]="player.position === 2"
+         [class.top-3]="player.position === 3">
+      
+      <div class="rank-pos">
+        <span *ngIf="player.position === 1">🥇</span>
+        <span *ngIf="player.position === 2">🥈</span>
+        <span *ngIf="player.position === 3">🥉</span>
+        <span *ngIf="player.position > 3">#{{ player.position }}</span>
+      </div>
+      
+      <div class="player-info">
+        <span class="player-name">{{ player.username }}</span>
+      </div>
+      
+      <div class="player-score">
+        <span class="xp-value">{{ player.periodXp }} XP</span>
+      </div>
+      
+    </div>
+  </div>
+</div>
