@@ -84,7 +84,7 @@
   font-weight: 500;
 }
 
-.app-content {
+.content-area {
   flex-grow: 1;
   overflow-y: auto;
   padding: 24px 16px 100px 16px;

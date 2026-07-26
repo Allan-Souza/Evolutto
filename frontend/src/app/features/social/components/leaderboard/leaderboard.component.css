@@ -1,6 +1,6 @@
 .leaderboard {
-  padding: 16px;
-  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 h3 {

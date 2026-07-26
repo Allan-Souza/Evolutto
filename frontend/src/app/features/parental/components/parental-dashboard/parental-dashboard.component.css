@@ -1,5 +1,6 @@
 .parental-dashboard-container {
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
   animation: fadeIn 0.4s ease-out;
 }
 
