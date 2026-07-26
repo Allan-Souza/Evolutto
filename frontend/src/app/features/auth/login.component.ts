@@ -11,8 +11,8 @@ import { AuthService } from '../../core/auth/auth.service';
       <p>Transforme sua rotina em um jogo épico!</p>
       
       <div class="login-actions glass-panel">
-        <button class="btn-primary" (click)="loginAsChild()">🎮 Entrar como Criança</button>
-        <button class="btn-secondary" (click)="loginAsParent()">👨‍👩‍👧 Entrar como Responsável</button>
+        <button class="btn-primary" (click)="loginAsChild()">🎮 Entrar como Aventureiro</button>
+        <button class="btn-secondary" (click)="loginAsParent()">🛡️ Entrar como Guardião</button>
       </div>
     </div>
   `,
