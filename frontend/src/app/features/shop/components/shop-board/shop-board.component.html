@@ -4,7 +4,7 @@
     <button class="btn-primary btn-sm" (click)="openModal()">+ Novo</button>
   </div>
   
-  <div *ngIf="status === ShopStatus.FROZEN" class="frozen-warning glass-panel">
+  <div *ngIf="userStore.isDebuffed()" class="frozen-warning glass-panel">
     ❄️ Sua Lojinha está congelada pelos seus pais. Cumpra uma missão de redenção para liberar!
   </div>
 
@@ -14,7 +14,7 @@
     (saveEvent)="onSaveReward($event)">
   </app-reward-form-modal>
 
-  <div class="rewards-wrapper" [class.frozen]="status === ShopStatus.FROZEN" *ngIf="rewards.length > 0; else noRewards">
+  <div class="rewards-wrapper" [class.frozen]="userStore.isDebuffed()" *ngIf="rewards.length > 0; else noRewards">
     <app-reward-card 
       *ngFor="let reward of rewards" 
       [reward]="reward" 

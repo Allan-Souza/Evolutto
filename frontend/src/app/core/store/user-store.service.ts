@@ -11,6 +11,8 @@ export class UserStoreService {
 
   // Evento emitido quando o usuário sobe de nível
   public readonly levelUp$ = new Subject<number>();
+  // Evento emitido quando um debuff é removido
+  public readonly debuffCleared$ = new Subject<void>();
 
   // Computed Values (Derivados do estado atual)
   readonly isDebuffed = computed(() => this.debuffCounter() > 0);
@@ -20,9 +22,14 @@ export class UserStoreService {
   updateProgress(newXpTotal: number, newCoinsTotal: number, debuff: number) {
     // Calcular quanto XP foi ganho nesta chamada
     const addedXp = newXpTotal - this.currentXp();
+    const wasDebuffed = this.isDebuffed();
     
     this.currentCoins.set(newCoinsTotal);
     this.debuffCounter.set(debuff);
+
+    if (wasDebuffed && !this.isDebuffed()) {
+      this.debuffCleared$.next();
+    }
 
     let nextXp = this.currentXp() + addedXp;
     let target = this.currentLevel() * 1000;

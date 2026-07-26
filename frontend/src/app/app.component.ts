@@ -25,6 +25,10 @@ export class AppComponent implements OnInit {
       this.newLevel = level;
       this.showLevelUpModal = true;
     });
+
+    this.userStore.debuffCleared$.subscribe(() => {
+      this.toastService.show('✨ Você se redimiu! Sua Lojinha foi descongelada.', 'success');
+    });
   }
 
   closeModal() {
