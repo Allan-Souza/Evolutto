@@ -56,5 +56,12 @@
       <span>Guardião</span>
     </a>
   </nav>
+  
+  <app-toast></app-toast>
+  <app-level-up-modal 
+    [show]="showLevelUpModal" 
+    [newLevel]="newLevel" 
+    (closeEvent)="closeModal()">
+  </app-level-up-modal>
 
 </div>
