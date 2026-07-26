@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserStoreService } from './core/store/user-store.service';
 import { AuthService } from './core/auth/auth.service';
+import { ToastService } from './core/services/toast.service';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { LevelUpModalComponent } from './shared/components/level-up-modal/level-up-modal.component';
 
@@ -16,6 +17,7 @@ import { LevelUpModalComponent } from './shared/components/level-up-modal/level-
 export class AppComponent implements OnInit {
   userStore = inject(UserStoreService);
   authService = inject(AuthService);
+  toastService = inject(ToastService);
 
   showLevelUpModal = false;
   newLevel = 1;
