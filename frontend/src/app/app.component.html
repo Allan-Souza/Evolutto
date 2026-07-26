@@ -5,6 +5,12 @@
   <!-- Top Header (Stats) -->
   <header class="app-header glass-panel" *ngIf="authService.isAuthenticated()">
     <div class="user-stats">
+      
+      <!-- Avatar (Abre Perfil) -->
+      <div class="stat-item avatar-badge" (click)="openProfileModal()" style="cursor: pointer; padding: 4px; border-radius: 50%; background: rgba(59, 130, 246, 0.2); border: 2px solid var(--primary-color);">
+        <ng-icon [name]="userStore.avatar()" style="font-size: 1.5rem; color: var(--primary-color); display: flex;"></ng-icon>
+      </div>
+
       <div class="stat-item level-badge">
         <span class="label">Lvl</span>
         <span class="value">{{ userStore.currentLevel() }}</span>
@@ -58,10 +64,16 @@
   </nav>
   
   <app-toast></app-toast>
+  
   <app-level-up-modal 
     [show]="showLevelUpModal" 
     [newLevel]="newLevel" 
     (closeEvent)="closeModal()">
   </app-level-up-modal>
+
+  <app-profile-modal
+    *ngIf="showProfileModal"
+    (closeEvent)="closeProfileModal()">
+  </app-profile-modal>
 
 </div>

@@ -6,12 +6,13 @@ import { AuthService } from './core/auth/auth.service';
 import { ToastService } from './core/services/toast.service';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { LevelUpModalComponent } from './shared/components/level-up-modal/level-up-modal.component';
+import { ProfileModalComponent } from './shared/components/profile-modal/profile-modal.component';
 import { NgIconComponent } from '@ng-icons/core';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ToastComponent, LevelUpModalComponent, NgIconComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, ToastComponent, LevelUpModalComponent, ProfileModalComponent, NgIconComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
   toastService = inject(ToastService);
 
   showLevelUpModal = false;
+  showProfileModal = false;
   newLevel = 1;
 
   ngOnInit() {
@@ -36,5 +38,13 @@ export class AppComponent implements OnInit {
 
   closeModal() {
     this.showLevelUpModal = false;
+  }
+
+  openProfileModal() {
+    this.showProfileModal = true;
+  }
+
+  closeProfileModal() {
+    this.showProfileModal = false;
   }
 }

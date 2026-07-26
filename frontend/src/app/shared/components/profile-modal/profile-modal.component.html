@@ -1,0 +1,48 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content glass-panel" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <h2>Ficha do Personagem</h2>
+      <button class="btn-close" (click)="onClose()">✕</button>
+    </div>
+
+    <div class="profile-stats">
+      <div class="stat-box">
+        <span class="stat-label">Nível</span>
+        <span class="stat-value text-primary">{{ userStore.currentLevel() }}</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Total XP</span>
+        <span class="stat-value text-purple">{{ (userStore.currentLevel() - 1) * 1000 + userStore.currentXp() }}</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Hábitos Feitos</span>
+        <span class="stat-value text-green">{{ userStore.totalHabitsCompleted() }}</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Nome do Aventureiro</label>
+      <input type="text" [(ngModel)]="editName" placeholder="Ex: Alex" autocomplete="off" />
+    </div>
+
+    <div class="form-group">
+      <label>Avatar</label>
+      <div class="avatar-grid">
+        <div 
+          *ngFor="let avatar of availableAvatars" 
+          class="avatar-option"
+          [class.selected]="selectedAvatar === avatar"
+          (click)="selectAvatar(avatar)">
+          <ng-icon [name]="avatar"></ng-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="onClose()">Cancelar</button>
+      <button type="button" class="btn-primary" (click)="saveProfile()">Salvar Perfil</button>
+    </div>
+
+  </div>
+</div>

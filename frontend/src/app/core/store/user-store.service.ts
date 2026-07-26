@@ -8,6 +8,11 @@ export class UserStoreService {
   readonly currentCoins = signal<number>(0);
   readonly currentLevel = signal<number>(1);
   readonly debuffCounter = signal<number>(0);
+  
+  // Perfil
+  readonly username = signal<string>('Aventureiro');
+  readonly avatar = signal<string>('lucideUser');
+  readonly totalHabitsCompleted = signal<number>(0);
 
   // Evento emitido quando o usuário sobe de nível
   public readonly levelUp$ = new Subject<number>();
@@ -23,6 +28,10 @@ export class UserStoreService {
     // Calcular quanto XP foi ganho nesta chamada
     const addedXp = newXpTotal - this.currentXp();
     const wasDebuffed = this.isDebuffed();
+
+    if (addedXp > 0) {
+      this.totalHabitsCompleted.update(t => t + 1);
+    }
     
     this.currentCoins.set(newCoinsTotal);
     this.debuffCounter.set(debuff);
@@ -46,5 +55,10 @@ export class UserStoreService {
 
   spendCoins(cost: number) {
     this.currentCoins.update(coins => coins - cost);
+  }
+
+  updateProfile(name: string, icon: string) {
+    this.username.set(name);
+    this.avatar.set(icon);
   }
 }

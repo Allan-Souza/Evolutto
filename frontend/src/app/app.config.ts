@@ -12,7 +12,14 @@ import {
   lucideCheckCircle2,
   lucideXCircle,
   lucideCoins,
-  lucideSnowflake
+  lucideSnowflake,
+  lucideUser,
+  lucideSwords,
+  lucideWand,
+  lucideCrown,
+  lucideFlame,
+  lucideGhost,
+  lucideRocket
 } from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
@@ -27,7 +34,14 @@ export const appConfig: ApplicationConfig = {
       lucideCheckCircle2,
       lucideXCircle,
       lucideCoins,
-      lucideSnowflake
+      lucideSnowflake,
+      lucideUser,
+      lucideSwords,
+      lucideWand,
+      lucideCrown,
+      lucideFlame,
+      lucideGhost,
+      lucideRocket
     })
   ]
 };
