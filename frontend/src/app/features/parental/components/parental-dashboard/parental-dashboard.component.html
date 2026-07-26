@@ -1,0 +1,42 @@
+<div class="parental-dashboard-container">
+  <div class="header-actions">
+    <h2>Visão Parental</h2>
+    <span class="child-selector">👤 Criança: Alex</span>
+  </div>
+
+  <!-- Debuff Alert Section -->
+  <div *ngIf="isShopFrozen" class="debuff-alert glass-panel danger-pulse">
+    <div class="alert-content">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-text">
+        <h3>Lojinha Congelada!</h3>
+        <p>Alex falhou em realizar o "Dever de Casa" e ativou um Debuff. A Lojinha está bloqueada.</p>
+      </div>
+    </div>
+    <button class="btn-primary unfreeze-btn" (click)="unfreezeShop()">Descongelar (Perdoar)</button>
+  </div>
+
+  <h3 class="section-title">Aprovações Pendentes</h3>
+  
+  <div *ngIf="isLoading" class="loading-state glass-panel">
+    Buscando atividades... ⏳
+  </div>
+
+  <div *ngIf="!isLoading && approvals.length === 0" class="empty-state glass-panel">
+    Nenhuma aprovação pendente no momento. 🎉
+  </div>
+
+  <div class="approvals-list" *ngIf="!isLoading && approvals.length > 0">
+    <div class="approval-card glass-panel animate-slide-up" *ngFor="let item of approvals">
+      <div class="approval-info">
+        <h4>{{ item.habitTitle }}</h4>
+        <span class="badge" [ngClass]="item.difficulty.toLowerCase()">{{ item.difficulty }}</span>
+        <p class="time">Completado hoje</p>
+      </div>
+      <div class="approval-actions">
+        <button class="btn-icon btn-reject" (click)="handleApproval(item.habitId, false)" title="Rejeitar">❌</button>
+        <button class="btn-icon btn-approve" (click)="handleApproval(item.habitId, true)" title="Aprovar">✅</button>
+      </div>
+    </div>
+  </div>
+</div>

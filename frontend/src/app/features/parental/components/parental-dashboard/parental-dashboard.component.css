@@ -1,0 +1,152 @@
+.parental-dashboard-container {
+  padding: 16px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-actions h2 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.child-selector {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 16px;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.debuff-alert {
+  border: 1px solid var(--danger-color);
+  background: rgba(239, 68, 68, 0.1);
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.alert-content {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.alert-icon {
+  font-size: 2rem;
+}
+
+.alert-text h3 {
+  color: var(--danger-color);
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+}
+
+.alert-text p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.unfreeze-btn {
+  background: var(--danger-color);
+  width: 100%;
+}
+
+.unfreeze-btn:hover {
+  background: #dc2626;
+}
+
+.danger-pulse {
+  animation: dangerPulse 2s infinite;
+}
+
+@keyframes dangerPulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.approvals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.approval-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.approval-info h4 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+}
+
+.approval-info .badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.approval-info .badge.medium { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+.approval-info .badge.hard { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+
+.approval-info .time {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 8px 0 0 0;
+}
+
+.approval-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.btn-icon:hover {
+  transform: scale(1.1);
+}
+
+.btn-reject {
+  background: rgba(239, 68, 68, 0.2);
+  color: white;
+}
+
+.btn-approve {
+  background: rgba(16, 185, 129, 0.2);
+  color: white;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-secondary);
+}

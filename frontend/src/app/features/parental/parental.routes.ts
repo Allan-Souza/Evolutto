@@ -1,2 +1,6 @@
 import { Routes } from '@angular/router';
-export const PARENTAL_ROUTES: Routes = [];
+import { ParentalDashboardComponent } from './components/parental-dashboard/parental-dashboard.component';
+
+export const PARENTAL_ROUTES: Routes = [
+  { path: '', component: ParentalDashboardComponent }
+];
