@@ -7,12 +7,12 @@ import { AuthService } from '../../core/auth/auth.service';
   standalone: true,
   template: `
     <div class="login-container">
-      <h1>Evolutto</h1>
-      <p>Transforme sua rotina em um jogo épico!</p>
+      <img src="main-logo.png" alt="Evolutto" class="main-logo" />
+      <p class="slogan">Sua jornada épica começa agora. Complete hábitos, ganhe recompensas e suba de nível na vida real!</p>
       
       <div class="login-actions glass-panel">
-        <button class="btn-primary" (click)="loginAsChild()">🎮 Entrar como Aventureiro</button>
-        <button class="btn-primary" (click)="loginAsSolo()" style="background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6;">🐺 Entrar como Lobo Solitário</button>
+        <button class="btn-primary btn-adventurer" (click)="loginAsChild()">🎮 Entrar como Aventureiro</button>
+        <button class="btn-primary btn-solo" (click)="loginAsSolo()">🐺 Entrar como Lobo Solitário</button>
         <button class="btn-secondary" (click)="loginAsParent()">🛡️ Entrar como Guardião</button>
       </div>
     </div>
@@ -27,24 +27,62 @@ import { AuthService } from '../../core/auth/auth.service';
       text-align: center;
       padding: 32px;
     }
-    h1 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 8px; }
-    p { color: var(--text-secondary); margin-bottom: 32px; }
+    .main-logo {
+      max-width: 250px;
+      margin-bottom: 16px;
+      animation: fadeIn 1s ease-out;
+    }
+    .slogan { 
+      color: var(--text-secondary); 
+      margin-bottom: 32px; 
+      max-width: 400px;
+      line-height: 1.5;
+      font-size: 1.1rem;
+    }
     .login-actions {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      padding: 24px;
+      padding: 32px 24px;
       width: 100%;
-      max-width: 300px;
+      max-width: 320px;
+      border-radius: var(--radius-lg);
+    }
+    .btn-adventurer {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
+    }
+    .btn-adventurer:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+    .btn-solo {
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid #8b5cf6;
+      color: #c4b5fd;
+    }
+    .btn-solo:hover {
+      background: #8b5cf6;
+      color: white;
     }
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
       padding: 12px 16px;
       border-radius: var(--radius-md);
       font-weight: bold;
       cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   `]
 })
