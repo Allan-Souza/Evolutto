@@ -15,7 +15,8 @@ export class HabitService {
       description: 'Manter a hidratação diária',
       type: HabitType.GOOD,
       difficulty: HabitDifficulty.EASY,
-      isActive: true
+      isActive: true,
+      streak: 3
     },
     {
       id: '2',
@@ -23,7 +24,8 @@ export class HabitService {
       description: 'Evitar comer besteiras',
       type: HabitType.BAD,
       difficulty: HabitDifficulty.HARD,
-      isActive: true
+      isActive: true,
+      streak: 0
     },
     {
       id: '3',
@@ -31,7 +33,8 @@ export class HabitService {
       description: 'Foco no Angular e Ionic',
       type: HabitType.GOOD,
       difficulty: HabitDifficulty.MEDIUM,
-      isActive: true
+      isActive: true,
+      streak: 0
     }
   ];
 
@@ -44,10 +47,28 @@ export class HabitService {
       id: Math.random().toString(36).substr(2, 9),
       ...request,
       description: request.description || '',
-      isActive: true
+      isActive: true,
+      streak: 0
     };
     this.habits.push(newHabit);
     return of(newHabit).pipe(delay(800));
+  }
+
+  updateHabit(id: string, request: CreateHabitRequest): Observable<HabitResponse> {
+    const index = this.habits.findIndex(h => h.id === id);
+    if (index === -1) throw new Error('Habit not found');
+    
+    this.habits[index] = {
+      ...this.habits[index],
+      ...request,
+      description: request.description || ''
+    };
+    return of(this.habits[index]).pipe(delay(500));
+  }
+
+  deleteHabit(id: string): Observable<void> {
+    this.habits = this.habits.filter(h => h.id !== id);
+    return of(void 0).pipe(delay(500));
   }
 
   executeHabit(habitId: string, currentXp: number, currentCoins: number, currentDebuff: number, role: string): Observable<ExecuteHabitResponse> {
@@ -68,6 +89,9 @@ export class HabitService {
       coinsRewarded = baseReward;
 
       if (newDebuff > 0) newDebuff--;
+      
+      // Incrementa ofensiva apenas para efeitos visuais do MVP
+      habit.streak += 1;
     } else {
       // Hábito ruim
       if (role === 'SOLO') {

@@ -1,4 +1,14 @@
 <div class="reward-card glass-panel animate-slide-up">
+  
+  <div class="card-actions">
+    <button class="action-btn edit-btn" (click)="edit.emit(reward)" title="Editar">
+      <ng-icon name="lucideEdit2"></ng-icon>
+    </button>
+    <button class="action-btn delete-btn" (click)="delete.emit(reward.id)" title="Excluir">
+      <ng-icon name="lucideTrash2"></ng-icon>
+    </button>
+  </div>
+
   <div class="reward-info">
     <h3 class="reward-title">{{ reward.title }}</h3>
     <div class="reward-cost">

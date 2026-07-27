@@ -19,7 +19,9 @@ import {
   lucideCrown,
   lucideFlame,
   lucideGhost,
-  lucideRocket
+  lucideRocket,
+  lucideEdit2,
+  lucideTrash2
 } from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
@@ -41,7 +43,9 @@ export const appConfig: ApplicationConfig = {
       lucideCrown,
       lucideFlame,
       lucideGhost,
-      lucideRocket
+      lucideRocket,
+      lucideEdit2,
+      lucideTrash2
     })
   ]
 };

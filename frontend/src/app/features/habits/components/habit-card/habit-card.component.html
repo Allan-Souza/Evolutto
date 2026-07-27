@@ -1,6 +1,21 @@
 <div class="habit-card glass-panel animate-slide-up" [ngClass]="{'bad-habit': habit.type === HabitType.BAD}">
+  
+  <div class="card-actions">
+    <button class="action-btn edit-btn" (click)="edit.emit(habit)" title="Editar">
+      <ng-icon name="lucideEdit2"></ng-icon>
+    </button>
+    <button class="action-btn delete-btn" (click)="delete.emit(habit.id)" title="Excluir">
+      <ng-icon name="lucideTrash2"></ng-icon>
+    </button>
+  </div>
+
   <div class="habit-info">
-    <h3 class="habit-title">{{ habit.title }}</h3>
+    <h3 class="habit-title">
+      {{ habit.title }}
+      <span class="streak-badge" *ngIf="habit.type === HabitType.GOOD && habit.streak > 0">
+        <ng-icon name="lucideFlame" class="flame-icon"></ng-icon> {{ habit.streak }}
+      </span>
+    </h3>
     <p class="habit-desc">{{ habit.description }}</p>
     <div class="habit-meta">
       <span class="difficulty-badge" [attr.data-diff]="habit.difficulty">{{ habit.difficulty }}</span>

@@ -22,6 +22,7 @@ export class ShopBoardComponent implements OnInit {
   loadingId: string | null = null;
   showModal = false;
   isLoading = true;
+  rewardToEdit: RewardItem | null = null;
   
   private shopService = inject(ShopService);
   private toastService = inject(ToastService);
@@ -50,19 +51,43 @@ export class ShopBoardComponent implements OnInit {
     });
   }
 
-  openModal() {
+  openModal(reward?: RewardItem) {
+    if (reward) {
+      this.rewardToEdit = reward;
+    }
     this.showModal = true;
   }
 
   closeModal() {
     this.showModal = false;
+    this.rewardToEdit = null;
   }
 
   onSaveReward(request: CreateRewardRequest) {
-    this.shopService.createReward(request).subscribe(newReward => {
-      this.rewards = [...this.rewards, newReward];
-      this.closeModal();
-      this.toastService.show('Recompensa criada com sucesso!', 'success');
-    });
+    if (this.rewardToEdit) {
+      this.shopService.updateReward(this.rewardToEdit.id, request).subscribe(updatedReward => {
+        const index = this.rewards.findIndex(r => r.id === updatedReward.id);
+        if (index !== -1) {
+          this.rewards[index] = updatedReward;
+        }
+        this.closeModal();
+        this.toastService.show('Recompensa atualizada!', 'info');
+      });
+    } else {
+      this.shopService.createReward(request).subscribe(newReward => {
+        this.rewards = [...this.rewards, newReward];
+        this.closeModal();
+        this.toastService.show('Recompensa criada!', 'success');
+      });
+    }
+  }
+
+  onDeleteReward(id: string) {
+    if (confirm('Tem certeza que deseja excluir esta recompensa?')) {
+      this.shopService.deleteReward(id).subscribe(() => {
+        this.rewards = this.rewards.filter(r => r.id !== id);
+        this.toastService.show('Recompensa excluída.', 'warning');
+      });
+    }
   }
 }

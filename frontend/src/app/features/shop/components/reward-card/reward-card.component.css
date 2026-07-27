@@ -4,6 +4,7 @@
   justify-content: space-between;
   padding: 16px;
   margin-bottom: 12px;
+  position: relative;
 }
 
 .reward-info {
@@ -35,3 +36,32 @@
   padding: 10px 16px;
   font-size: 0.9rem;
 }
+
+/* Card Actions (Edit/Delete) */
+.card-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.edit-btn:hover { color: var(--primary-color); }
+.delete-btn:hover { color: #ef4444; }

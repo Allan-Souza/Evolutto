@@ -30,6 +30,19 @@ export class ShopService {
     return of(newReward).pipe(delay(800));
   }
 
+  updateReward(id: string, request: CreateRewardRequest): Observable<RewardItem> {
+    const index = this.rewards.findIndex(r => r.id === id);
+    if (index === -1) throw new Error('Reward not found');
+    
+    this.rewards[index] = { ...this.rewards[index], ...request };
+    return of(this.rewards[index]).pipe(delay(500));
+  }
+
+  deleteReward(id: string): Observable<void> {
+    this.rewards = this.rewards.filter(r => r.id !== id);
+    return of(void 0).pipe(delay(500));
+  }
+
   buyReward(rewardId: string, currentCoins: number): Observable<BuyRewardResponse> {
     const reward = this.rewards.find(r => r.id === rewardId);
     if (!reward) throw new Error('Reward not found');

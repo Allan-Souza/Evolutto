@@ -19,6 +19,7 @@ export class HabitListComponent implements OnInit {
   habits: HabitResponse[] = [];
   loadingId: string | null = null;
   showModal = false;
+  habitToEdit: HabitResponse | null = null;
   
   private habitService = inject(HabitService);
   private userStore = inject(UserStoreService);
@@ -60,19 +61,43 @@ export class HabitListComponent implements OnInit {
     });
   }
 
-  openModal() {
+  openModal(habit?: HabitResponse) {
+    if (habit) {
+      this.habitToEdit = habit;
+    }
     this.showModal = true;
   }
 
   closeModal() {
     this.showModal = false;
+    this.habitToEdit = null;
   }
 
   onSaveHabit(request: CreateHabitRequest) {
-    this.habitService.createHabit(request).subscribe(newHabit => {
-      this.habits = [...this.habits, newHabit];
-      this.closeModal();
-      this.toastService.show('Hábito criado com sucesso!', 'success');
-    });
+    if (this.habitToEdit) {
+      this.habitService.updateHabit(this.habitToEdit.id, request).subscribe(updatedHabit => {
+        const index = this.habits.findIndex(h => h.id === updatedHabit.id);
+        if (index !== -1) {
+          this.habits[index] = updatedHabit;
+        }
+        this.closeModal();
+        this.toastService.show('Hábito atualizado!', 'info');
+      });
+    } else {
+      this.habitService.createHabit(request).subscribe(newHabit => {
+        this.habits = [...this.habits, newHabit];
+        this.closeModal();
+        this.toastService.show('Hábito criado!', 'success');
+      });
+    }
+  }
+
+  onDeleteHabit(id: string) {
+    if (confirm('Tem certeza que deseja excluir este hábito?')) {
+      this.habitService.deleteHabit(id).subscribe(() => {
+        this.habits = this.habits.filter(h => h.id !== id);
+        this.toastService.show('Hábito excluído.', 'warning');
+      });
+    }
   }
 }

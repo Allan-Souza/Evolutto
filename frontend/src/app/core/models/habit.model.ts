@@ -16,6 +16,7 @@ export interface HabitResponse {
   type: HabitType;
   difficulty: HabitDifficulty;
   isActive: boolean;
+  streak: number;
 }
 
 export interface ExecuteHabitResponse {

@@ -10,6 +10,7 @@
 
   <app-reward-form-modal
     *ngIf="showModal"
+    [editData]="rewardToEdit"
     (closeEvent)="closeModal()"
     (saveEvent)="onSaveReward($event)">
   </app-reward-form-modal>
@@ -20,7 +21,9 @@
       [reward]="reward" 
       [canAfford]="userStore.currentCoins() >= reward.cost"
       [isLoading]="loadingId === reward.id"
-      (buy)="onBuy($event)">
+      (buy)="onBuy($event)"
+      (edit)="openModal($event)"
+      (delete)="onDeleteReward($event)">
     </app-reward-card>
   </div>
   

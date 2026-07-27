@@ -9,7 +9,9 @@
       *ngFor="let habit of habits" 
       [habit]="habit" 
       [isLoading]="loadingId === habit.id"
-      (execute)="onExecute($event)">
+      (execute)="onExecute($event)"
+      (edit)="openModal($event)"
+      (delete)="onDeleteHabit($event)">
     </app-habit-card>
   </div>
   
@@ -21,6 +23,7 @@
 
   <app-habit-form-modal
     *ngIf="showModal"
+    [editData]="habitToEdit"
     (closeEvent)="closeModal()"
     (saveEvent)="onSaveHabit($event)">
   </app-habit-form-modal>
