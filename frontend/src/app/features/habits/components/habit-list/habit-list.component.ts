@@ -7,11 +7,12 @@ import { HabitResponse, HabitType, CreateHabitRequest } from '../../../../core/m
 import { HabitCardComponent } from '../habit-card/habit-card.component';
 import { ToastService } from '../../../../core/services/toast.service';
 import { HabitFormModalComponent } from '../habit-form-modal/habit-form-modal.component';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-habit-list',
   standalone: true,
-  imports: [CommonModule, HabitCardComponent, HabitFormModalComponent],
+  imports: [CommonModule, HabitCardComponent, HabitFormModalComponent, ConfirmModalComponent],
   templateUrl: './habit-list.component.html',
   styleUrls: ['./habit-list.component.css']
 })
@@ -20,6 +21,8 @@ export class HabitListComponent implements OnInit {
   loadingId: string | null = null;
   showModal = false;
   habitToEdit: HabitResponse | null = null;
+  showConfirmModal = false;
+  itemToDelete: string | null = null;
   
   private habitService = inject(HabitService);
   private userStore = inject(UserStoreService);
@@ -93,11 +96,23 @@ export class HabitListComponent implements OnInit {
   }
 
   onDeleteHabit(id: string) {
-    if (confirm('Tem certeza que deseja excluir este hábito?')) {
-      this.habitService.deleteHabit(id).subscribe(() => {
-        this.habits = this.habits.filter(h => h.id !== id);
+    this.itemToDelete = id;
+    this.showConfirmModal = true;
+  }
+
+  onConfirmDelete() {
+    if (this.itemToDelete) {
+      this.habitService.deleteHabit(this.itemToDelete).subscribe(() => {
+        this.habits = this.habits.filter(h => h.id !== this.itemToDelete);
         this.toastService.show('Hábito excluído.', 'warning');
+        this.showConfirmModal = false;
+        this.itemToDelete = null;
       });
     }
+  }
+
+  onCancelDelete() {
+    this.showConfirmModal = false;
+    this.itemToDelete = null;
   }
 }

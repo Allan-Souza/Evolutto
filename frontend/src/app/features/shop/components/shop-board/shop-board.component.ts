@@ -7,11 +7,12 @@ import { RewardCardComponent } from '../reward-card/reward-card.component';
 import { ToastService } from '../../../../core/services/toast.service';
 import { RewardFormModalComponent } from '../reward-form-modal/reward-form-modal.component';
 import { NgIconComponent } from '@ng-icons/core';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-shop-board',
   standalone: true,
-  imports: [CommonModule, RewardCardComponent, RewardFormModalComponent, NgIconComponent],
+  imports: [CommonModule, RewardCardComponent, RewardFormModalComponent, NgIconComponent, ConfirmModalComponent],
   templateUrl: './shop-board.component.html',
   styleUrls: ['./shop-board.component.css']
 })
@@ -23,6 +24,8 @@ export class ShopBoardComponent implements OnInit {
   showModal = false;
   isLoading = true;
   rewardToEdit: RewardItem | null = null;
+  showConfirmModal = false;
+  itemToDelete: string | null = null;
   
   private shopService = inject(ShopService);
   private toastService = inject(ToastService);
@@ -83,11 +86,23 @@ export class ShopBoardComponent implements OnInit {
   }
 
   onDeleteReward(id: string) {
-    if (confirm('Tem certeza que deseja excluir esta recompensa?')) {
-      this.shopService.deleteReward(id).subscribe(() => {
-        this.rewards = this.rewards.filter(r => r.id !== id);
+    this.itemToDelete = id;
+    this.showConfirmModal = true;
+  }
+
+  onConfirmDelete() {
+    if (this.itemToDelete) {
+      this.shopService.deleteReward(this.itemToDelete).subscribe(() => {
+        this.rewards = this.rewards.filter(r => r.id !== this.itemToDelete);
         this.toastService.show('Recompensa excluída.', 'warning');
+        this.showConfirmModal = false;
+        this.itemToDelete = null;
       });
     }
+  }
+
+  onCancelDelete() {
+    this.showConfirmModal = false;
+    this.itemToDelete = null;
   }
 }

@@ -32,4 +32,13 @@
       <p>Nenhuma recompensa cadastrada. Crie uma nova para se motivar!</p>
     </div>
   </ng-template>
+
+  <app-confirm-modal
+    *ngIf="showConfirmModal"
+    title="Excluir Recompensa"
+    message="Tem certeza que deseja excluir esta recompensa permanentemente?"
+    confirmText="Excluir"
+    (confirm)="onConfirmDelete()"
+    (cancel)="onCancelDelete()">
+  </app-confirm-modal>
 </div>

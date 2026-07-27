@@ -27,4 +27,13 @@
     (closeEvent)="closeModal()"
     (saveEvent)="onSaveHabit($event)">
   </app-habit-form-modal>
+
+  <app-confirm-modal
+    *ngIf="showConfirmModal"
+    title="Excluir Hábito"
+    message="Tem certeza que deseja excluir este hábito permanentemente?"
+    confirmText="Excluir"
+    (confirm)="onConfirmDelete()"
+    (cancel)="onCancelDelete()">
+  </app-confirm-modal>
 </div>
