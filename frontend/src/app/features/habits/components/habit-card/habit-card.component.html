@@ -1,13 +1,6 @@
 <div class="habit-card glass-panel animate-slide-up" [ngClass]="{'bad-habit': habit.type === HabitType.BAD}">
   
-  <div class="card-actions">
-    <button class="action-btn edit-btn" (click)="edit.emit(habit)" title="Editar">
-      <ng-icon name="lucideEdit2"></ng-icon>
-    </button>
-    <button class="action-btn delete-btn" (click)="delete.emit(habit.id)" title="Excluir">
-      <ng-icon name="lucideTrash2"></ng-icon>
-    </button>
-  </div>
+
 
   <div class="habit-info">
     <h3 class="habit-title">
@@ -22,11 +15,22 @@
     </div>
   </div>
   
-  <button 
-    class="execute-btn" 
-    [ngClass]="{'btn-primary': habit.type === HabitType.GOOD, 'btn-danger': habit.type === HabitType.BAD}"
-    [disabled]="isLoading" 
-    (click)="execute.emit(habit.id)">
-    {{ isLoading ? '⏳' : (habit.type === HabitType.GOOD ? 'Feito' : 'Falhei') }}
-  </button>
+  <div class="card-right-section">
+    <div class="card-actions">
+      <button class="action-btn edit-btn" (click)="edit.emit(habit)" title="Editar">
+        <ng-icon name="lucideEdit2"></ng-icon>
+      </button>
+      <button class="action-btn delete-btn" (click)="delete.emit(habit.id)" title="Excluir">
+        <ng-icon name="lucideTrash2"></ng-icon>
+      </button>
+    </div>
+
+    <button 
+      class="execute-btn" 
+      [ngClass]="{'btn-primary': habit.type === HabitType.GOOD, 'btn-danger': habit.type === HabitType.BAD}"
+      [disabled]="isLoading" 
+      (click)="execute.emit(habit.id)">
+      {{ isLoading ? '⏳' : (habit.type === HabitType.GOOD ? 'Feito' : 'Falhei') }}
+    </button>
+  </div>
 </div>

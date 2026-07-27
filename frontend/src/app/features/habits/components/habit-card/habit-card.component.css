@@ -7,7 +7,6 @@
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  position: relative;
   margin-bottom: 12px;
   border-left: 4px solid var(--success-color);
 }
@@ -59,11 +58,16 @@
 .execute-btn:active:not(:disabled) { transform: scale(0.92); }
 .execute-btn:disabled { opacity: 0.6; cursor: wait; }
 
+/* Right Section layout */
+.card-right-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
 /* Card Actions (Edit/Delete) */
 .card-actions {
-  position: absolute;
-  top: 12px;
-  right: 12px;
   display: flex;
   gap: 8px;
 }
