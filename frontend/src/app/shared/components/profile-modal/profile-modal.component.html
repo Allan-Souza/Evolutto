@@ -39,12 +39,12 @@
       </div>
     </div>
 
-    <div class="modal-actions" style="justify-content: space-between;">
-      <button type="button" class="btn-secondary" style="color: var(--danger-color); border-color: rgba(239, 68, 68, 0.3);" (click)="onLogout()">Sair da Conta</button>
-      <div style="display: flex; gap: 8px;">
+    <div class="modal-actions-container">
+      <div class="modal-actions">
         <button type="button" class="btn-secondary" (click)="onClose()">Cancelar</button>
         <button type="button" class="btn-primary" (click)="saveProfile()">Salvar Perfil</button>
       </div>
+      <button type="button" class="btn-danger-full" (click)="onLogout()">Sair da Conta</button>
     </div>
 
   </div>

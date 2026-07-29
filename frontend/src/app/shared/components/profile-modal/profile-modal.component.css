@@ -139,10 +139,16 @@ input:focus {
 }
 
 /* Actions */
+.modal-actions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
 .modal-actions {
   display: flex;
   gap: 12px;
-  margin-top: 24px;
 }
 
 .btn-secondary {
@@ -163,6 +169,22 @@ input:focus {
 
 .btn-primary {
   flex: 1;
+}
+
+.btn-danger-full {
+  width: 100%;
+  background: var(--danger-color);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-danger-full:hover {
+  background: #dc2626;
 }
 
 @keyframes fadeIn {
