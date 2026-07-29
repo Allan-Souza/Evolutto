@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
 import { UserStoreService } from '../../core/store/user-store.service';
@@ -10,7 +10,7 @@ type LoginView = 'ROLE_SELECTION' | 'LOGIN' | 'REGISTER';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   template: `
     <div class="login-container">
       <img src="main-logo.png" alt="Evolutto" class="main-logo" />
@@ -24,6 +24,7 @@ type LoginView = 'ROLE_SELECTION' | 'LOGIN' | 'REGISTER';
           <button class="btn-primary btn-adventurer" (click)="selectRole('ADVENTURER')">🎮 Aventureiro</button>
           <button class="btn-primary btn-solo" (click)="selectRole('SOLO')">🐺 Lobo Solitário</button>
           <button class="btn-secondary" (click)="selectRole('GUARDIAN')">🛡️ Guardião</button>
+          <a class="info-link" routerLink="/roles-info">Entenda cada tipo de perfil</a>
         </ng-container>
 
         <!-- View 2: Login Form -->
@@ -157,6 +158,19 @@ type LoginView = 'ROLE_SELECTION' | 'LOGIN' | 'REGISTER';
       color: white;
     }
     
+    .info-link {
+      color: var(--primary-color);
+      font-size: 0.9rem;
+      text-decoration: none;
+      margin-top: 8px;
+      transition: var(--transition);
+      display: inline-block;
+    }
+    .info-link:hover {
+      color: white;
+      text-decoration: underline;
+    }
+
     /* Formulários */
     form {
       display: flex;
@@ -223,9 +237,11 @@ export class LoginComponent implements OnInit {
   private auth = inject(AuthService);
   private userStore = inject(UserStoreService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
 
   currentView: LoginView = 'ROLE_SELECTION';
+  defaultAction: LoginView = 'LOGIN';
   selectedRole: string = '';
   errorMessage: string | null = null;
   isLoading = false;
@@ -239,13 +255,21 @@ export class LoginComponent implements OnInit {
     if (this.auth.isAuthenticated()) {
       this.redirectByRole(this.auth.currentRole());
     }
+
+    this.route.queryParams.subscribe(params => {
+      if (params['mode'] === 'REGISTER') {
+        this.defaultAction = 'REGISTER';
+      } else {
+        this.defaultAction = 'LOGIN';
+      }
+    });
   }
 
   selectRole(role: string) {
     this.selectedRole = role;
     this.authForm.reset();
     this.errorMessage = null;
-    this.currentView = 'LOGIN';
+    this.currentView = this.defaultAction;
   }
 
   switchView(view: LoginView) {

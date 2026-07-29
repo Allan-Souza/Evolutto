@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login.component';
+import { RoleExplanationComponent } from './features/auth/role-explanation.component';
 import { authGuard } from './core/auth/auth.guard';
 import { roleGuard } from './core/auth/role.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'roles-info', component: RoleExplanationComponent },
   { 
     path: 'habits', 
     loadChildren: () => import('./features/habits/habits.routes').then(m => m.HABIT_ROUTES),
