@@ -5,6 +5,6 @@ import { AuthService } from './auth.service';
 export const roleGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
-  if (authService.hasRole('PARENT')) return true;
+  if (authService.hasRole('GUARDIAN')) return true;
   return router.parseUrl('/habits');
 };
