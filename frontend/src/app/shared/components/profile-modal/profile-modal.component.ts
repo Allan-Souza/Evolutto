@@ -2,6 +2,8 @@ import { Component, EventEmitter, Output, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgIconComponent } from '@ng-icons/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../core/auth/auth.service';
 import { UserStoreService } from '../../../core/store/user-store.service';
 import { ToastService } from '../../../core/services/toast.service';
 
@@ -17,6 +19,8 @@ export class ProfileModalComponent implements OnInit {
 
   userStore = inject(UserStoreService);
   toastService = inject(ToastService);
+  authService = inject(AuthService);
+  router = inject(Router);
 
   editName = '';
   selectedAvatar = '';
@@ -54,5 +58,11 @@ export class ProfileModalComponent implements OnInit {
 
   onClose() {
     this.closeEvent.emit();
+  }
+
+  onLogout() {
+    this.authService.logout();
+    this.onClose();
+    this.router.navigate(['/login']);
   }
 }
