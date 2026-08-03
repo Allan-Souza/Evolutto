@@ -18,6 +18,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'missions',
+    loadChildren: () => import('./features/missions/missions.routes').then(m => m.MISSION_ROUTES),
+    canActivate: [authGuard]
+  },
+  {
     path: 'social',
     loadChildren: () => import('./features/social/social.routes').then(m => m.SOCIAL_ROUTES),
     canActivate: [authGuard]

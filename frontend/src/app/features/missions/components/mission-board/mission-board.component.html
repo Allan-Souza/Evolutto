@@ -1,0 +1,61 @@
+<div class="mission-board">
+  <div class="page-header">
+    <h1><ng-icon name="lucideTarget"></ng-icon> Missões</h1>
+    <p class="page-subtitle">Complete hábitos para progredir nas missões e resgatar recompensas épicas!</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="skeleton-container">
+    <div class="skeleton-card glass-panel" *ngFor="let i of [1,2,3]"></div>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+
+    <!-- Missões Diárias -->
+    <section *ngIf="dailyMissions.length > 0" class="mission-section">
+      <h2 class="section-title">
+        <span class="section-dot daily-dot"></span> Diárias
+      </h2>
+      <app-mission-card
+        *ngFor="let mission of dailyMissions"
+        [mission]="mission"
+        [isClaimLoading]="claimingId === mission.id"
+        (claim)="onClaim($event)">
+      </app-mission-card>
+    </section>
+
+    <!-- Missões Semanais -->
+    <section *ngIf="weeklyMissions.length > 0" class="mission-section">
+      <h2 class="section-title">
+        <span class="section-dot weekly-dot"></span> Semanais
+      </h2>
+      <app-mission-card
+        *ngFor="let mission of weeklyMissions"
+        [mission]="mission"
+        [isClaimLoading]="claimingId === mission.id"
+        (claim)="onClaim($event)">
+      </app-mission-card>
+    </section>
+
+    <!-- Missões Mensais -->
+    <section *ngIf="monthlyMissions.length > 0" class="mission-section">
+      <h2 class="section-title">
+        <span class="section-dot monthly-dot"></span> Mensais
+      </h2>
+      <app-mission-card
+        *ngFor="let mission of monthlyMissions"
+        [mission]="mission"
+        [isClaimLoading]="claimingId === mission.id"
+        (claim)="onClaim($event)">
+      </app-mission-card>
+    </section>
+
+    <!-- Empty State -->
+    <div *ngIf="missions.length === 0" class="empty-state glass-panel">
+      <ng-icon name="lucideTarget" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 16px;"></ng-icon>
+      <h3>Nenhuma missão disponível</h3>
+      <p>Complete hábitos para desbloquear missões épicas!</p>
+    </div>
+    
+  </ng-container>
+</div>

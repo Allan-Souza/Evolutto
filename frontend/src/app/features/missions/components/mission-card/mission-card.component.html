@@ -1,0 +1,52 @@
+<div class="mission-card glass-panel animate-slide-up" [class.claimed]="isClaimed">
+  
+  <div class="card-header">
+    <span class="type-badge" [ngClass]="typeBadgeClass">{{ typeLabel }}</span>
+    <div class="rewards-preview">
+      <span class="reward-tag xp-tag">+{{ mission.xpReward }} XP</span>
+      <span class="reward-tag coin-tag">
+        <ng-icon name="lucideCoins" style="font-size: 0.8rem;"></ng-icon>
+        {{ mission.coinReward }}
+      </span>
+    </div>
+  </div>
+
+  <h3 class="mission-title">{{ mission.title }}</h3>
+  <p class="mission-desc">{{ mission.description }}</p>
+
+  <div class="progress-section">
+    <div class="progress-text">
+      <span>Progresso</span>
+      <span class="progress-numbers">{{ mission.currentSteps }} / {{ mission.totalSteps }}</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div 
+        class="progress-bar-fill"
+        [style.width.%]="progressPercent"
+        [class.complete]="isCompleted || isClaimed">
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <button 
+      *ngIf="isClaimed"
+      class="btn-claimed" 
+      disabled>
+      ✅ Resgatada
+    </button>
+    <button 
+      *ngIf="isCompleted && !isClaimed"
+      class="btn-claim"
+      [disabled]="isClaimLoading"
+      (click)="onClaim()">
+      {{ isClaimLoading ? 'Resgatando...' : '🎁 Resgatar Recompensa' }}
+    </button>
+    <span 
+      *ngIf="!isCompleted && !isClaimed" 
+      class="status-active">
+      Em andamento...
+    </span>
+  </div>
+
+</div>

@@ -8,6 +8,7 @@ import { HabitCardComponent } from '../habit-card/habit-card.component';
 import { ToastService } from '../../../../core/services/toast.service';
 import { HabitFormModalComponent } from '../habit-form-modal/habit-form-modal.component';
 import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
+import { MissionService } from '../../../missions/services/mission.service';
 
 @Component({
   selector: 'app-habit-list',
@@ -28,6 +29,7 @@ export class HabitListComponent implements OnInit {
   private userStore = inject(UserStoreService);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
+  private missionService = inject(MissionService);
 
   ngOnInit(): void {
     this.habitService.getHabits().subscribe(data => {
@@ -50,6 +52,8 @@ export class HabitListComponent implements OnInit {
         const habit = this.habits.find(h => h.id === habitId);
         if (habit?.type === HabitType.GOOD) {
           this.toastService.show(`Você ganhou +${res.xpRewarded} XP!`, 'success');
+          // Atualizar progresso das missões vinculadas a este hábito
+          this.missionService.updateProgress(habitId);
         } else {
           if (this.authService.currentRole() === 'SOLO') {
             this.toastService.show(`Você perdeu 10 XP e 10 Moedas!`, 'danger');
