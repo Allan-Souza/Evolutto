@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { AuthService } from '../../core/auth/auth.service';
 import { UserStoreService } from '../../core/store/user-store.service';
 
-type LoginView = 'ROLE_SELECTION' | 'LOGIN' | 'REGISTER';
+type LoginView = 'LOGIN' | 'REGISTER';
 
 @Component({
   selector: 'app-login',
@@ -14,23 +14,14 @@ type LoginView = 'ROLE_SELECTION' | 'LOGIN' | 'REGISTER';
   template: `
     <div class="login-container">
       <img src="main-logo.png" alt="Evolutto" class="main-logo" />
-      <p class="slogan" *ngIf="currentView === 'ROLE_SELECTION'">Sua jornada épica começa agora. Complete hábitos, ganhe recompensas e suba de nível na vida real!</p>
+      <p class="slogan" *ngIf="currentView === 'LOGIN'">Sua jornada épica começa agora. Complete hábitos, ganhe recompensas e suba de nível na vida real!</p>
       
-      <div class="login-actions glass-panel" [ngSwitch]="currentView">
+      <div class="login-actions glass-panel">
         
-        <!-- View 1: Seleção de Papel -->
-        <ng-container *ngSwitchCase="'ROLE_SELECTION'">
-          <h2 class="view-title">Quem é você?</h2>
-          <button class="btn-primary btn-adventurer" (click)="selectRole('ADVENTURER')">🎮 Aventureiro</button>
-          <button class="btn-primary btn-solo" (click)="selectRole('SOLO')">🐺 Lobo Solitário</button>
-          <button class="btn-secondary" (click)="selectRole('GUARDIAN')">🛡️ Guardião</button>
-          <a class="info-link" routerLink="/roles-info">Entenda cada tipo de perfil</a>
-        </ng-container>
-
-        <!-- View 2: Login Form -->
-        <ng-container *ngSwitchCase="'LOGIN'">
-          <h2 class="view-title">Entrar como {{ getRoleName() }}</h2>
-          <form [formGroup]="authForm" (ngSubmit)="onLogin()">
+        <!-- Login Form -->
+        <ng-container *ngIf="currentView === 'LOGIN'">
+          <h2 class="view-title">Entrar na sua conta</h2>
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
             
             <div class="form-group">
               <label>Nome de Usuário</label>
@@ -45,19 +36,19 @@ type LoginView = 'ROLE_SELECTION' | 'LOGIN' | 'REGISTER';
             <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
 
             <div class="form-actions">
-              <button type="submit" class="btn-primary" [disabled]="authForm.invalid || isLoading">
+              <button type="submit" class="btn-primary" [disabled]="loginForm.invalid || isLoading">
                 {{ isLoading ? 'Entrando...' : 'Entrar' }}
               </button>
               <button type="button" class="btn-link" (click)="switchView('REGISTER')">Não tem conta? Registre-se</button>
-              <button type="button" class="btn-back" (click)="switchView('ROLE_SELECTION')">Voltar</button>
+              <a class="info-link" routerLink="/roles-info">Entenda cada tipo de perfil</a>
             </div>
           </form>
         </ng-container>
 
-        <!-- View 3: Register Form -->
-        <ng-container *ngSwitchCase="'REGISTER'">
-          <h2 class="view-title">Criar {{ getRoleName() }}</h2>
-          <form [formGroup]="authForm" (ngSubmit)="onRegister()">
+        <!-- Register Form -->
+        <ng-container *ngIf="currentView === 'REGISTER'">
+          <h2 class="view-title">Criar nova conta</h2>
+          <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
             
             <div class="form-group">
               <label>Escolha um Nome de Usuário</label>
@@ -69,14 +60,35 @@ type LoginView = 'ROLE_SELECTION' | 'LOGIN' | 'REGISTER';
               <input type="password" formControlName="password" placeholder="Uma senha forte..." />
             </div>
 
+            <div class="form-group">
+              <label>Tipo de Perfil</label>
+              <div class="role-selector">
+                <button type="button" class="role-btn" 
+                  [class.selected]="registerForm.get('role')?.value === 'ADVENTURER'"
+                  (click)="selectRole('ADVENTURER')">
+                  🎮 Aventureiro
+                </button>
+                <button type="button" class="role-btn" 
+                  [class.selected]="registerForm.get('role')?.value === 'SOLO'"
+                  (click)="selectRole('SOLO')">
+                  🐺 Lobo Solitário
+                </button>
+                <button type="button" class="role-btn" 
+                  [class.selected]="registerForm.get('role')?.value === 'GUARDIAN'"
+                  (click)="selectRole('GUARDIAN')">
+                  🛡️ Guardião
+                </button>
+              </div>
+            </div>
+
             <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
 
             <div class="form-actions">
-              <button type="submit" class="btn-primary" [disabled]="authForm.invalid || isLoading">
+              <button type="submit" class="btn-primary" [disabled]="registerForm.invalid || isLoading">
                 {{ isLoading ? 'Registrando...' : 'Criar Conta' }}
               </button>
               <button type="button" class="btn-link" (click)="switchView('LOGIN')">Já tem conta? Entrar</button>
-              <button type="button" class="btn-back" (click)="switchView('ROLE_SELECTION')">Voltar</button>
+              <a class="info-link" routerLink="/roles-info">Entenda cada tipo de perfil</a>
             </div>
           </form>
         </ng-container>
@@ -113,62 +125,14 @@ type LoginView = 'ROLE_SELECTION' | 'LOGIN' | 'REGISTER';
       gap: 16px;
       padding: 32px 24px;
       width: 100%;
-      max-width: 340px;
+      max-width: 380px;
       border-radius: var(--radius-lg);
       animation: slideUp 0.4s ease-out;
     }
     .view-title {
       font-size: 1.2rem;
       color: white;
-      margin-bottom: 16px;
-    }
-    .btn-adventurer {
-      background: rgba(59, 130, 246, 0.2);
-      border: 1px solid var(--primary-color);
-      color: var(--primary-color);
-      width: 100%;
-    }
-    .btn-adventurer:hover {
-      background: var(--primary-color);
-      color: white;
-    }
-    .btn-solo {
-      background: rgba(139, 92, 246, 0.2);
-      border: 1px solid #8b5cf6;
-      color: #c4b5fd;
-      width: 100%;
-    }
-    .btn-solo:hover {
-      background: #8b5cf6;
-      color: white;
-    }
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-secondary);
-      padding: 12px 16px;
-      border-radius: var(--radius-md);
-      font-weight: bold;
-      cursor: pointer;
-      transition: var(--transition);
-      width: 100%;
-    }
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-    }
-    
-    .info-link {
-      color: var(--primary-color);
-      font-size: 0.9rem;
-      text-decoration: none;
-      margin-top: 8px;
-      transition: var(--transition);
-      display: inline-block;
-    }
-    .info-link:hover {
-      color: white;
-      text-decoration: underline;
+      margin-bottom: 8px;
     }
 
     /* Formulários */
@@ -191,11 +155,42 @@ type LoginView = 'ROLE_SELECTION' | 'LOGIN' | 'REGISTER';
       border: 1px solid var(--surface-border);
       border-radius: var(--radius-md);
       color: white;
+      font-size: 1rem;
+      font-family: var(--font-family);
     }
     .form-group input:focus {
       outline: none;
       border-color: var(--primary-color);
     }
+
+    /* Role Selector */
+    .role-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .role-btn {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+    }
+    .role-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+    .role-btn.selected {
+      border-color: var(--primary-color);
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--primary-color);
+    }
+
     .error-msg {
       color: var(--danger-color);
       font-size: 0.85rem;
@@ -219,9 +214,18 @@ type LoginView = 'ROLE_SELECTION' | 'LOGIN' | 'REGISTER';
     }
     .btn-link { color: var(--primary-color); }
     .btn-link:hover { color: white; text-decoration: underline; }
-    
-    .btn-back { color: var(--text-secondary); }
-    .btn-back:hover { color: white; }
+
+    .info-link {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-block;
+    }
+    .info-link:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+    }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-10px); }
@@ -240,15 +244,19 @@ export class LoginComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
 
-  currentView: LoginView = 'ROLE_SELECTION';
-  defaultAction: LoginView = 'LOGIN';
-  selectedRole: string = '';
+  currentView: LoginView = 'LOGIN';
   errorMessage: string | null = null;
   isLoading = false;
 
-  authForm: FormGroup = this.fb.group({
+  loginForm: FormGroup = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(3)]],
     password: ['', [Validators.required, Validators.minLength(3)]]
+  });
+
+  registerForm: FormGroup = this.fb.group({
+    username: ['', [Validators.required, Validators.minLength(3)]],
+    password: ['', [Validators.required, Validators.minLength(3)]],
+    role: ['', Validators.required]
   });
 
   ngOnInit() {
@@ -258,43 +266,30 @@ export class LoginComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       if (params['mode'] === 'REGISTER') {
-        this.defaultAction = 'REGISTER';
-      } else {
-        this.defaultAction = 'LOGIN';
+        this.currentView = 'REGISTER';
       }
     });
   }
 
   selectRole(role: string) {
-    this.selectedRole = role;
-    this.authForm.reset();
-    this.errorMessage = null;
-    this.currentView = this.defaultAction;
+    this.registerForm.patchValue({ role });
   }
 
   switchView(view: LoginView) {
     this.currentView = view;
     this.errorMessage = null;
-    this.authForm.reset();
-  }
-
-  getRoleName(): string {
-    switch(this.selectedRole) {
-      case 'ADVENTURER': return 'Aventureiro';
-      case 'SOLO': return 'Lobo Solitário';
-      case 'GUARDIAN': return 'Guardião';
-      default: return 'Usuário';
-    }
+    this.loginForm.reset();
+    this.registerForm.reset();
   }
 
   onLogin() {
-    if (this.authForm.invalid) return;
+    if (this.loginForm.invalid) return;
     
     this.isLoading = true;
     this.errorMessage = null;
-    const { username, password } = this.authForm.value;
+    const { username, password } = this.loginForm.value;
 
-    this.auth.login(username, password, this.selectedRole).subscribe(res => {
+    this.auth.login(username, password).subscribe(res => {
       this.isLoading = false;
       if (res.success && res.user) {
         this.userStore.updateProfile(res.user.username, res.user.avatar);
@@ -306,13 +301,13 @@ export class LoginComponent implements OnInit {
   }
 
   onRegister() {
-    if (this.authForm.invalid) return;
+    if (this.registerForm.invalid) return;
     
     this.isLoading = true;
     this.errorMessage = null;
-    const { username, password } = this.authForm.value;
+    const { username, password, role } = this.registerForm.value;
 
-    this.auth.register(username, password, this.selectedRole).subscribe(res => {
+    this.auth.register(username, password, role).subscribe(res => {
       this.isLoading = false;
       if (res.success && res.user) {
         this.userStore.updateProfile(res.user.username, res.user.avatar);
@@ -331,3 +326,4 @@ export class LoginComponent implements OnInit {
     }
   }
 }
+

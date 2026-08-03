@@ -24,8 +24,8 @@ export class AuthService {
   
   logout() { this.token.set(null); this.role.set('STANDARD'); }
 
-  login(username: string, password: string, requiredRole: string): Observable<AuthResponse> {
-    const user = this.users.find(u => u.username === username && u.password === password && u.role === requiredRole);
+  login(username: string, password: string): Observable<AuthResponse> {
+    const user = this.users.find(u => u.username === username && u.password === password);
     
     if (user) {
       this.token.set(`mock-token-${user.id}`);
@@ -33,7 +33,7 @@ export class AuthService {
       return of({ success: true, token: this.token()!, user }).pipe(delay(800));
     }
     
-    return of({ success: false, message: 'Usuário ou senha incorretos para este papel.' }).pipe(delay(800));
+    return of({ success: false, message: 'Usuário ou senha incorretos.' }).pipe(delay(800));
   }
 
   register(username: string, password: string, role: string): Observable<AuthResponse> {
