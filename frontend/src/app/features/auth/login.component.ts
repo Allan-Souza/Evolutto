@@ -220,7 +220,8 @@ type LoginView = 'LOGIN' | 'REGISTER';
       font-size: 0.85rem;
       text-decoration: none;
       transition: var(--transition);
-      display: inline-block;
+      display: block;
+      text-align: center;
     }
     .info-link:hover {
       color: var(--primary-color);
