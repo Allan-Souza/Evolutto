@@ -7,34 +7,36 @@ import com.evolutto.backend.domain.user.User;
 import com.evolutto.backend.domain.user.UserRepository;
 import com.evolutto.backend.domain.user.UserRole;
 import com.evolutto.backend.security.JwtService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+    }
+
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.username())) {
             throw new IllegalArgumentException("Este nome de usuário já está em uso.");
         }
 
-        User user = User.builder()
-                .username(request.username())
-                .password(passwordEncoder.encode(request.password()))
-                .role(request.role())
-                .avatar(request.role() == UserRole.GUARDIAN ? "lucideShield" : "lucideUser")
-                .build();
+        User user = new User();
+        user.setUsername(request.username());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole(request.role());
+        user.setAvatar(request.role() == UserRole.GUARDIAN ? "lucideShield" : "lucideUser");
 
         userRepository.save(user);
 
         String token = jwtService.generateToken(user.getId(), user.getUsername(), user.getRole().name());
-
         return buildAuthResponse(token, user);
     }
 
@@ -47,7 +49,6 @@ public class AuthService {
         }
 
         String token = jwtService.generateToken(user.getId(), user.getUsername(), user.getRole().name());
-
         return buildAuthResponse(token, user);
     }
 

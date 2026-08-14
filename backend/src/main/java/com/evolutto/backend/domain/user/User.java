@@ -1,13 +1,9 @@
 package com.evolutto.backend.domain.user;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
-@Builder
 public class User {
 
     @Id
@@ -25,27 +21,67 @@ public class User {
     private UserRole role;
 
     @Column(length = 50)
-    @Builder.Default
     private String avatar = "lucideUser";
 
-    // ===== Atributos de RPG =====
-
-    @Builder.Default
     private int currentXp = 0;
-
-    @Builder.Default
     private int currentCoins = 0;
-
-    @Builder.Default
     private int level = 1;
-
-    @Builder.Default
     private int debuffCounter = 0;
 
     @Column(length = 20)
-    @Builder.Default
-    private String shopStatus = "ACTIVE"; // ACTIVE | FROZEN
+    private String shopStatus = "ACTIVE";
 
-    @Builder.Default
     private int totalHabitsCompleted = 0;
+
+    public User() {}
+
+    public User(String id, String username, String password, UserRole role, String avatar,
+                int currentXp, int currentCoins, int level, int debuffCounter, 
+                String shopStatus, int totalHabitsCompleted) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.avatar = avatar;
+        this.currentXp = currentXp;
+        this.currentCoins = currentCoins;
+        this.level = level;
+        this.debuffCounter = debuffCounter;
+        this.shopStatus = shopStatus;
+        this.totalHabitsCompleted = totalHabitsCompleted;
+    }
+
+    // Getters & Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public UserRole getRole() { return role; }
+    public void setRole(UserRole role) { this.role = role; }
+
+    public String getAvatar() { return avatar; }
+    public void setAvatar(String avatar) { this.avatar = avatar; }
+
+    public int getCurrentXp() { return currentXp; }
+    public void setCurrentXp(int currentXp) { this.currentXp = currentXp; }
+
+    public int getCurrentCoins() { return currentCoins; }
+    public void setCurrentCoins(int currentCoins) { this.currentCoins = currentCoins; }
+
+    public int getLevel() { return level; }
+    public void setLevel(int level) { this.level = level; }
+
+    public int getDebuffCounter() { return debuffCounter; }
+    public void setDebuffCounter(int debuffCounter) { this.debuffCounter = debuffCounter; }
+
+    public String getShopStatus() { return shopStatus; }
+    public void setShopStatus(String shopStatus) { this.shopStatus = shopStatus; }
+
+    public int getTotalHabitsCompleted() { return totalHabitsCompleted; }
+    public void setTotalHabitsCompleted(int totalHabitsCompleted) { this.totalHabitsCompleted = totalHabitsCompleted; }
 }
