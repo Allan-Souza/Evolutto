@@ -1,14 +1,17 @@
-export interface UserAccount {
+﻿export interface UserProfile {
   id: string;
   username: string;
-  password?: string; // Optional because we don't always need to expose it
   role: string;
   avatar: string;
+  currentXp: number;
+  currentCoins: number;
+  level: number;
+  debuffCounter: number;
+  shopStatus: string;
+  totalHabitsCompleted: number;
 }
 
 export interface AuthResponse {
-  success: boolean;
-  token?: string;
-  user?: UserAccount;
-  message?: string;
+  token: string;
+  user: UserProfile;
 }

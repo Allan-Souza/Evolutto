@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+﻿import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -14,7 +14,7 @@ type LoginView = 'LOGIN' | 'REGISTER';
   template: `
     <div class="login-container">
       <img src="main-logo.png" alt="Evolutto" class="main-logo" />
-      <p class="slogan" *ngIf="currentView === 'LOGIN'">Sua jornada épica começa agora. Complete hábitos, ganhe recompensas e suba de nível na vida real!</p>
+      <p class="slogan" *ngIf="currentView === 'LOGIN'">Sua jornada Ã©pica comeÃ§a agora. Complete hÃ¡bitos, ganhe recompensas e suba de nÃ­vel na vida real!</p>
       
       <div class="login-actions glass-panel">
         
@@ -24,7 +24,7 @@ type LoginView = 'LOGIN' | 'REGISTER';
           <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
             
             <div class="form-group">
-              <label>Nome de Usuário</label>
+              <label>Nome de UsuÃ¡rio</label>
               <input type="text" formControlName="username" placeholder="Digite seu nome heroico..." />
             </div>
 
@@ -39,7 +39,7 @@ type LoginView = 'LOGIN' | 'REGISTER';
               <button type="submit" class="btn-primary" [disabled]="loginForm.invalid || isLoading">
                 {{ isLoading ? 'Entrando...' : 'Entrar' }}
               </button>
-              <button type="button" class="btn-link" (click)="switchView('REGISTER')">Não tem conta? Registre-se</button>
+              <button type="button" class="btn-link" (click)="switchView('REGISTER')">NÃ£o tem conta? Registre-se</button>
               <a class="info-link" routerLink="/roles-info">Entenda cada tipo de perfil</a>
             </div>
           </form>
@@ -51,8 +51,8 @@ type LoginView = 'LOGIN' | 'REGISTER';
           <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
             
             <div class="form-group">
-              <label>Escolha um Nome de Usuário</label>
-              <input type="text" formControlName="username" placeholder="Como serás conhecido?" />
+              <label>Escolha um Nome de UsuÃ¡rio</label>
+              <input type="text" formControlName="username" placeholder="Como serÃ¡s conhecido?" />
             </div>
 
             <div class="form-group">
@@ -66,17 +66,17 @@ type LoginView = 'LOGIN' | 'REGISTER';
                 <button type="button" class="role-btn" 
                   [class.selected]="registerForm.get('role')?.value === 'ADVENTURER'"
                   (click)="selectRole('ADVENTURER')">
-                  🎮 Aventureiro
+                  ðŸŽ® Aventureiro
                 </button>
                 <button type="button" class="role-btn" 
                   [class.selected]="registerForm.get('role')?.value === 'SOLO'"
                   (click)="selectRole('SOLO')">
-                  🐺 Lobo Solitário
+                  ðŸº Lobo SolitÃ¡rio
                 </button>
                 <button type="button" class="role-btn" 
                   [class.selected]="registerForm.get('role')?.value === 'GUARDIAN'"
                   (click)="selectRole('GUARDIAN')">
-                  🛡️ Guardião
+                  ðŸ›¡ï¸ GuardiÃ£o
                 </button>
               </div>
             </div>
@@ -87,7 +87,7 @@ type LoginView = 'LOGIN' | 'REGISTER';
               <button type="submit" class="btn-primary" [disabled]="registerForm.invalid || isLoading">
                 {{ isLoading ? 'Registrando...' : 'Criar Conta' }}
               </button>
-              <button type="button" class="btn-link" (click)="switchView('LOGIN')">Já tem conta? Entrar</button>
+              <button type="button" class="btn-link" (click)="switchView('LOGIN')">JÃ¡ tem conta? Entrar</button>
               <a class="info-link" routerLink="/roles-info">Entenda cada tipo de perfil</a>
             </div>
           </form>
@@ -135,7 +135,7 @@ type LoginView = 'LOGIN' | 'REGISTER';
       margin-bottom: 8px;
     }
 
-    /* Formulários */
+    /* FormulÃ¡rios */
     form {
       display: flex;
       flex-direction: column;
@@ -290,13 +290,14 @@ export class LoginComponent implements OnInit {
     this.errorMessage = null;
     const { username, password } = this.loginForm.value;
 
-    this.auth.login(username, password).subscribe(res => {
-      this.isLoading = false;
-      if (res.success && res.user) {
-        this.userStore.updateProfile(res.user.username, res.user.avatar);
+    this.auth.login(username, password).subscribe({
+      next: (res) => {
+        this.isLoading = false;
         this.redirectByRole(res.user.role);
-      } else {
-        this.errorMessage = res.message || 'Erro ao realizar login.';
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err.error?.error || 'Erro ao realizar login.';
       }
     });
   }
@@ -308,13 +309,14 @@ export class LoginComponent implements OnInit {
     this.errorMessage = null;
     const { username, password, role } = this.registerForm.value;
 
-    this.auth.register(username, password, role).subscribe(res => {
-      this.isLoading = false;
-      if (res.success && res.user) {
-        this.userStore.updateProfile(res.user.username, res.user.avatar);
+    this.auth.register(username, password, role).subscribe({
+      next: (res) => {
+        this.isLoading = false;
         this.redirectByRole(res.user.role);
-      } else {
-        this.errorMessage = res.message || 'Erro ao criar conta.';
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err.error?.error || 'Erro ao criar conta.';
       }
     });
   }
@@ -327,4 +329,5 @@ export class LoginComponent implements OnInit {
     }
   }
 }
+
 

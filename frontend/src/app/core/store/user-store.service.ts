@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+﻿import { Injectable, signal, computed } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -14,16 +14,16 @@ export class UserStoreService {
   readonly avatar = signal<string>('lucideUser');
   readonly totalHabitsCompleted = signal<number>(0);
 
-  // Evento emitido quando o usuário sobe de nível
+  // Evento emitido quando o usuÃ¡rio sobe de nÃ­vel
   public readonly levelUp$ = new Subject<number>();
-  // Evento emitido quando um debuff é removido
+  // Evento emitido quando um debuff Ã© removido
   public readonly debuffCleared$ = new Subject<void>();
 
   // Computed Values (Derivados do estado atual)
   readonly isDebuffed = computed(() => this.debuffCounter() > 0);
   readonly xpToNextLevel = computed(() => this.currentLevel() * 1000 - this.currentXp());
 
-  // Ações para atualizar o estado
+  // AÃ§Ãµes para atualizar o estado
   updateProgress(newXpTotal: number, newCoinsTotal: number, debuff: number) {
     // Calcular quanto XP foi ganho nesta chamada
     const addedXp = newXpTotal - this.currentXp();
@@ -43,7 +43,7 @@ export class UserStoreService {
     let nextXp = this.currentXp() + addedXp;
     let target = this.currentLevel() * 1000;
 
-    // Lógica de Subir de Nível
+    // LÃ³gica de Subir de NÃ­vel
     if (nextXp >= target) {
       this.currentLevel.update(l => l + 1);
       this.currentXp.set(nextXp - target);
@@ -61,4 +61,16 @@ export class UserStoreService {
     this.username.set(name);
     this.avatar.set(icon);
   }
+
+  // Receives the backend user profile and populates all signals
+  hydrateProfile(profile: any) {
+    this.currentXp.set(profile.currentXp);
+    this.currentCoins.set(profile.currentCoins);
+    this.currentLevel.set(profile.level);
+    this.debuffCounter.set(profile.debuffCounter);
+    this.username.set(profile.username);
+    this.avatar.set(profile.avatar);
+    this.totalHabitsCompleted.set(profile.totalHabitsCompleted);
+  }
 }
+

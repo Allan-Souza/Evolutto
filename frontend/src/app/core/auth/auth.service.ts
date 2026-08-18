@@ -1,60 +1,54 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
-import { AuthResponse, UserAccount } from '../models/auth.model';
+﻿import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { AuthResponse, UserProfile } from '../models/auth.model';
+import { UserStoreService } from '../store/user-store.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private token = signal<string | null>(null);
-  private role = signal<string>('STANDARD');
+  private http = inject(HttpClient);
+  private userStore = inject(UserStoreService);
 
-  // Banco de Dados em Memória (Mock)
-  private users: UserAccount[] = [
-    { id: '1', username: 'Arthur', password: '123', role: 'ADVENTURER', avatar: 'lucideUser' },
-    { id: '2', username: 'Lobo', password: '123', role: 'SOLO', avatar: 'lucideUser' },
-    { id: '3', username: 'Pai', password: '123', role: 'GUARDIAN', avatar: 'lucideShield' }
-  ];
+  private readonly API_URL = 'http://localhost:8080/api/v1/auth';
+  private readonly TOKEN_KEY = 'evolutto_jwt';
+
+  private token = signal<string | null>(localStorage.getItem(this.TOKEN_KEY));
+  private role = signal<string>('STANDARD');
 
   isAuthenticated(): boolean { return !!this.token(); }
   getToken(): string | null { return this.token(); }
   currentRole(): string { return this.role(); }
   hasRole(requiredRole: string): boolean { return this.role() === requiredRole; }
   
-  // Utilizado para login forçado temporário (retrocompatibilidade caso necessário)
-  loginFallback(token: string, role: string) { this.token.set(token); this.role.set(role); }
-  
-  logout() { this.token.set(null); this.role.set('STANDARD'); }
+  logout() { 
+    this.token.set(null); 
+    this.role.set('STANDARD'); 
+    localStorage.removeItem(this.TOKEN_KEY);
+  }
 
   login(username: string, password: string): Observable<AuthResponse> {
-    const user = this.users.find(u => u.username === username && u.password === password);
-    
-    if (user) {
-      this.token.set(`mock-token-${user.id}`);
-      this.role.set(user.role);
-      return of({ success: true, token: this.token()!, user }).pipe(delay(800));
-    }
-    
-    return of({ success: false, message: 'Usuário ou senha incorretos.' }).pipe(delay(800));
+    return this.http.post<AuthResponse>(${this.API_URL}/login, { username, password })
+      .pipe(
+        tap(response => this.handleAuthSuccess(response))
+      );
   }
 
   register(username: string, password: string, role: string): Observable<AuthResponse> {
-    const exists = this.users.find(u => u.username === username);
-    if (exists) {
-      return of({ success: false, message: 'Este nome de usuário já está em uso.' }).pipe(delay(800));
-    }
+    return this.http.post<AuthResponse>(${this.API_URL}/register, { username, password, role })
+      .pipe(
+        tap(response => this.handleAuthSuccess(response))
+      );
+  }
 
-    const newUser: UserAccount = {
-      id: Math.random().toString(36).substr(2, 9),
-      username,
-      password,
-      role,
-      avatar: role === 'GUARDIAN' ? 'lucideShield' : 'lucideUser'
-    };
+  private handleAuthSuccess(response: AuthResponse) {
+    // 1. Guarda SOMENTE o token no localStorage
+    this.token.set(response.token);
+    localStorage.setItem(this.TOKEN_KEY, response.token);
 
-    this.users.push(newUser);
-    
-    this.token.set(`mock-token-${newUser.id}`);
-    this.role.set(newUser.role);
-    
-    return of({ success: true, token: this.token()!, user: newUser }).pipe(delay(800));
+    // 2. Define a role temporariamente em memória para os Guards
+    this.role.set(response.user.role);
+
+    // 3. Hidrata os dados confidenciais diretamente em memória via Signals
+    this.userStore.hydrateProfile(response.user);
   }
 }
