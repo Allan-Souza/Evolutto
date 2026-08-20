@@ -1,4 +1,4 @@
-﻿import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -14,7 +14,7 @@ type LoginView = 'LOGIN' | 'REGISTER';
   template: `
     <div class="login-container">
       <img src="main-logo.png" alt="Evolutto" class="main-logo" />
-      <p class="slogan" *ngIf="currentView === 'LOGIN'">Sua jornada Ã©pica comeÃ§a agora. Complete hÃ¡bitos, ganhe recompensas e suba de nÃ­vel na vida real!</p>
+      <p class="slogan" *ngIf="currentView === 'LOGIN'">Sua jornada épica começa agora. Complete hábitos, ganhe recompensas e suba de nível na vida real!</p>
       
       <div class="login-actions glass-panel">
         
@@ -24,7 +24,7 @@ type LoginView = 'LOGIN' | 'REGISTER';
           <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
             
             <div class="form-group">
-              <label>Nome de UsuÃ¡rio</label>
+              <label>Nome de Usuário</label>
               <input type="text" formControlName="username" placeholder="Digite seu nome heroico..." />
             </div>
 
@@ -39,7 +39,7 @@ type LoginView = 'LOGIN' | 'REGISTER';
               <button type="submit" class="btn-primary" [disabled]="loginForm.invalid || isLoading">
                 {{ isLoading ? 'Entrando...' : 'Entrar' }}
               </button>
-              <button type="button" class="btn-link" (click)="switchView('REGISTER')">NÃ£o tem conta? Registre-se</button>
+              <button type="button" class="btn-link" (click)="switchView('REGISTER')">Não tem conta? Registre-se</button>
               <a class="info-link" routerLink="/roles-info">Entenda cada tipo de perfil</a>
             </div>
           </form>
@@ -51,8 +51,8 @@ type LoginView = 'LOGIN' | 'REGISTER';
           <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
             
             <div class="form-group">
-              <label>Escolha um Nome de UsuÃ¡rio</label>
-              <input type="text" formControlName="username" placeholder="Como serÃ¡s conhecido?" />
+              <label>Escolha um Nome de Usuário</label>
+              <input type="text" formControlName="username" placeholder="Como serás conhecido?" />
             </div>
 
             <div class="form-group">
@@ -66,17 +66,17 @@ type LoginView = 'LOGIN' | 'REGISTER';
                 <button type="button" class="role-btn" 
                   [class.selected]="registerForm.get('role')?.value === 'ADVENTURER'"
                   (click)="selectRole('ADVENTURER')">
-                  ðŸŽ® Aventureiro
+                  🎮 Aventureiro
                 </button>
                 <button type="button" class="role-btn" 
                   [class.selected]="registerForm.get('role')?.value === 'SOLO'"
                   (click)="selectRole('SOLO')">
-                  ðŸº Lobo SolitÃ¡rio
+                  🐺 Lobo Solitário
                 </button>
                 <button type="button" class="role-btn" 
                   [class.selected]="registerForm.get('role')?.value === 'GUARDIAN'"
                   (click)="selectRole('GUARDIAN')">
-                  ðŸ›¡ï¸ GuardiÃ£o
+                  🛡️ Guardião
                 </button>
               </div>
             </div>
@@ -87,7 +87,7 @@ type LoginView = 'LOGIN' | 'REGISTER';
               <button type="submit" class="btn-primary" [disabled]="registerForm.invalid || isLoading">
                 {{ isLoading ? 'Registrando...' : 'Criar Conta' }}
               </button>
-              <button type="button" class="btn-link" (click)="switchView('LOGIN')">JÃ¡ tem conta? Entrar</button>
+              <button type="button" class="btn-link" (click)="switchView('LOGIN')">Já tem conta? Entrar</button>
               <a class="info-link" routerLink="/roles-info">Entenda cada tipo de perfil</a>
             </div>
           </form>
