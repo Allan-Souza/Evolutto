@@ -78,14 +78,14 @@ public class HabitService {
             user.setCurrentCoins(user.getCurrentCoins() + coinsRewarded);
             user.setTotalHabitsCompleted(user.getTotalHabitsCompleted() + 1);
 
-            // Level Up Algorithm: Meta = Nível Atual * 1000
+            // Level Up Algorithm: Meta = NÃ­vel Atual * 1000
             int xpTarget = user.getLevel() * 1000;
             if (user.getCurrentXp() >= xpTarget) {
                 user.setLevel(user.getLevel() + 1);
                 user.setCurrentXp(user.getCurrentXp() - xpTarget);
             }
         } else {
-            // Hábito RUIM (BAD) -> Gera Debuff
+            // HÃ¡bito RUIM (BAD) -> Gera Debuff
             habit.setStreak(0);
             user.setDebuffCounter(user.getDebuffCounter() + 1);
         }
@@ -93,7 +93,7 @@ public class HabitService {
         habitRepository.save(habit);
         userRepository.save(user);
 
-        // Registro de Log (Extrato para o Guardião ver depois)
+        // Registro de Log (Extrato para o GuardiÃ£o ver depois)
         HabitLog log = new HabitLog(user, habit, LocalDateTime.now(), LogStatus.COMPLETED, xpRewarded, coinsRewarded);
         log = habitLogRepository.save(log);
 
@@ -107,5 +107,36 @@ public class HabitService {
         response.setCurrentDebuffCounter(user.getDebuffCounter());
 
         return response;
+    }
+
+    @Transactional
+    public HabitResponse updateHabit(String userId, String habitId, CreateHabitRequest request) {
+        Habit habit = habitRepository.findById(habitId)
+                .orElseThrow(() -> new RuntimeException("Habit not found"));
+
+        if (!habit.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        habit.setTitle(request.getTitle());
+        habit.setDescription(request.getDescription());
+        habit.setType(request.getType());
+        habit.setDifficulty(request.getDifficulty());
+
+        habit = habitRepository.save(habit);
+        return new HabitResponse(habit);
+    }
+
+    @Transactional
+    public void deleteHabit(String userId, String habitId) {
+        Habit habit = habitRepository.findById(habitId)
+                .orElseThrow(() -> new RuntimeException("Habit not found"));
+
+        if (!habit.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        habit.setActive(false);
+        habitRepository.save(habit);
     }
 }

@@ -39,24 +39,18 @@ export class HabitListComponent implements OnInit {
 
   onExecute(habitId: string) {
     this.loadingId = habitId;
-    this.habitService.executeHabit(
-      habitId, 
-      this.userStore.currentXp(), 
-      this.userStore.currentCoins(), 
-      this.userStore.debuffCounter(),
-      this.authService.currentRole()
-    ).subscribe({
+    this.habitService.executeHabit(habitId).subscribe({
       next: (res) => {
         this.userStore.updateProgress(res.newTotalXp, res.newTotalCoins, res.currentDebuffCounter);
         
         const habit = this.habits.find(h => h.id === habitId);
         if (habit?.type === HabitType.GOOD) {
-          this.toastService.show(`Você ganhou +${res.xpRewarded} XP!`, 'success');
-          // Atualizar progresso das missões vinculadas a este hábito
+          this.toastService.show(`VocÃª ganhou +${res.xpRewarded} XP!`, 'success');
+          // Atualizar progresso das missÃµes vinculadas a este hÃ¡bito
           this.missionService.updateProgress(habitId);
         } else {
           if (this.authService.currentRole() === 'SOLO') {
-            this.toastService.show(`Você perdeu 10 XP e 10 Moedas!`, 'danger');
+            this.toastService.show(`VocÃª perdeu 10 XP e 10 Moedas!`, 'danger');
           } else {
             this.toastService.show(`Debuff aplicado! Penalidade ativada.`, 'danger');
           }
@@ -88,13 +82,13 @@ export class HabitListComponent implements OnInit {
           this.habits[index] = updatedHabit;
         }
         this.closeModal();
-        this.toastService.show('Hábito atualizado!', 'info');
+        this.toastService.show('HÃ¡bito atualizado!', 'info');
       });
     } else {
       this.habitService.createHabit(request).subscribe(newHabit => {
         this.habits = [...this.habits, newHabit];
         this.closeModal();
-        this.toastService.show('Hábito criado!', 'success');
+        this.toastService.show('HÃ¡bito criado!', 'success');
       });
     }
   }
@@ -108,7 +102,7 @@ export class HabitListComponent implements OnInit {
     if (this.itemToDelete) {
       this.habitService.deleteHabit(this.itemToDelete).subscribe(() => {
         this.habits = this.habits.filter(h => h.id !== this.itemToDelete);
-        this.toastService.show('Hábito excluído.', 'warning');
+        this.toastService.show('HÃ¡bito excluÃ­do.', 'warning');
         this.showConfirmModal = false;
         this.itemToDelete = null;
       });

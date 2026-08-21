@@ -38,4 +38,16 @@ public class HabitController {
         ExecuteHabitResponse response = habitService.executeHabit(user.getId(), habitId);
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/{habitId}")
+    public ResponseEntity<HabitResponse> updateHabit(@AuthenticationPrincipal User user, @PathVariable String habitId, @RequestBody CreateHabitRequest request) {
+        HabitResponse response = habitService.updateHabit(user.getId(), habitId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{habitId}")
+    public ResponseEntity<Void> deleteHabit(@AuthenticationPrincipal User user, @PathVariable String habitId) {
+        habitService.deleteHabit(user.getId(), habitId);
+        return ResponseEntity.noContent().build();
+    }
 }
