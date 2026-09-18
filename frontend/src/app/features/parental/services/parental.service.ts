@@ -1,38 +1,34 @@
-import { Injectable } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
-import { PendingApproval, ApproveHabitRequest } from '../../../core/models/parental.model';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface AdventurerSummaryResponse {
+  id: string;
+  username: string;
+  avatar: string;
+  currentXp: number;
+  currentCoins: number;
+  level: number;
+  debuffCounter: number;
+  totalHabitsCompleted: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ParentalService {
-  private mockApprovals: PendingApproval[] = [
-    {
-      id: 'app1',
-      childId: 'c1',
-      childName: 'Alex',
-      habitId: 'h1',
-      habitTitle: 'Lavar a Louça',
-      difficulty: 'MEDIUM',
-      completedAt: new Date().toISOString()
-    },
-    {
-      id: 'app2',
-      childId: 'c1',
-      childName: 'Alex',
-      habitId: 'h2',
-      habitTitle: 'Limpar o Quarto',
-      difficulty: 'HARD',
-      completedAt: new Date().toISOString()
-    }
-  ];
+  private http = inject(HttpClient);
+  private readonly API_URL = 'http://localhost:8080/api/v1/parental';
 
-  getPendingApprovals(): Observable<PendingApproval[]> {
-    return of([...this.mockApprovals]).pipe(delay(600));
+  linkAdventurer(username: string): Observable<AdventurerSummaryResponse> {
+    return this.http.post<AdventurerSummaryResponse>(`${this.API_URL}/link`, { username });
   }
 
-  approveHabit(request: ApproveHabitRequest): Observable<{ success: boolean }> {
-    this.mockApprovals = this.mockApprovals.filter(a => a.habitId !== request.habitId);
-    return of({ success: true }).pipe(delay(500));
+  getMyAdventurers(): Observable<AdventurerSummaryResponse[]> {
+    return this.http.get<AdventurerSummaryResponse[]>(`${this.API_URL}/adventurers`);
+  }
+
+  pardonDebuff(adventurerId: string): Observable<void> {
+    return this.http.post<void>(`${this.API_URL}/adventurer/${adventurerId}/pardon`, {});
   }
 }

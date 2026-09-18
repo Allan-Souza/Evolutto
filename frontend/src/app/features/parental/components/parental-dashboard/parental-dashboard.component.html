@@ -1,42 +1,53 @@
 <div class="parental-dashboard-container">
   <div class="header-actions">
     <h2>Visão do Guardião</h2>
-    <span class="child-selector">👤 Aventureiro: Alex</span>
   </div>
 
-  <!-- Debuff Alert Section -->
-  <div *ngIf="isShopFrozen" class="debuff-alert glass-panel danger-pulse">
-    <div class="alert-content">
-      <div class="alert-icon">⚠️</div>
-      <div class="alert-text">
-        <h3>Lojinha Congelada!</h3>
-        <p>Alex falhou em realizar o "Dever de Casa" e ativou um Debuff. A Lojinha está bloqueada.</p>
-      </div>
+  <!-- Form para vincular aventureiro -->
+  <div class="glass-panel" style="margin-bottom: 2rem; padding: 1.5rem;">
+    <h3 style="margin-top: 0;">Vincular Aventureiro</h3>
+    <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 1rem;">
+      Digite o username do aventureiro que você irá supervisionar.
+    </p>
+    <div style="display: flex; gap: 1rem;">
+      <input type="text" class="input-field" [(ngModel)]="linkUsername" placeholder="Ex: alex_rpg" style="flex: 1;" />
+      <button class="btn-primary" (click)="onLinkAdventurer()">Vincular</button>
     </div>
-    <button class="btn-primary unfreeze-btn" (click)="unfreezeShop()">Descongelar (Perdoar)</button>
   </div>
 
-  <h3 class="section-title">Aprovações Pendentes</h3>
+  <h3 class="section-title">Meus Aventureiros</h3>
   
   <div *ngIf="isLoading" class="loading-state glass-panel">
-    Buscando atividades... ⏳
+    Buscando aventureiros... ⏳
   </div>
 
-  <div *ngIf="!isLoading && approvals.length === 0" class="empty-state glass-panel">
-    Nenhuma aprovação pendente no momento. 🎉
+  <div *ngIf="!isLoading && adventurers.length === 0" class="empty-state glass-panel">
+    Você ainda não tem nenhum Aventureiro sob sua supervisão.
   </div>
 
-  <div class="approvals-list" *ngIf="!isLoading && approvals.length > 0">
-    <div class="approval-card glass-panel animate-slide-up" *ngFor="let item of approvals">
-      <div class="approval-info">
-        <h4>{{ item.habitTitle }}</h4>
-        <span class="badge" [ngClass]="item.difficulty.toLowerCase()">{{ item.difficulty }}</span>
-        <p class="time">Completado hoje</p>
+  <div class="approvals-list" *ngIf="!isLoading && adventurers.length > 0">
+    <div class="approval-card glass-panel animate-slide-up" *ngFor="let adv of adventurers" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
+      
+      <div style="display: flex; justify-content: space-between; width: 100%;">
+        <div class="approval-info">
+          <h4>👤 {{ adv.username }} (Nível {{ adv.level }})</h4>
+          <p class="time">XP: {{ adv.currentXp }} | Moedas: {{ adv.currentCoins }}</p>
+          <p class="time">Hábitos Concluídos: {{ adv.totalHabitsCompleted }}</p>
+        </div>
       </div>
-      <div class="approval-actions">
-        <button class="btn-icon btn-reject" (click)="handleApproval(item.habitId, false)" title="Rejeitar">❌</button>
-        <button class="btn-icon btn-approve" (click)="handleApproval(item.habitId, true)" title="Aprovar">✅</button>
+
+      <!-- Alerta de Debuff e Ação de Perdoar -->
+      <div *ngIf="adv.debuffCounter > 0" class="debuff-alert danger-pulse" style="width: 100%; border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+        <div class="alert-content">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-text">
+            <h3 style="margin: 0; font-size: 1rem;">Aventureiro Penalizado</h3>
+            <p style="margin: 0; font-size: 0.85rem;">Possui {{ adv.debuffCounter }} hábitos ruins pendentes.</p>
+          </div>
+        </div>
+        <button class="btn-primary unfreeze-btn" (click)="onPardon(adv.id)">Perdoar</button>
       </div>
+
     </div>
   </div>
 </div>

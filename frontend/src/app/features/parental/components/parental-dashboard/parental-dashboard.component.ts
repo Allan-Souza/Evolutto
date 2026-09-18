@@ -1,50 +1,64 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ParentalService } from '../../services/parental.service';
-import { PendingApproval } from '../../../../core/models/parental.model';
+import { FormsModule } from '@angular/forms';
+import { ParentalService, AdventurerSummaryResponse } from '../../services/parental.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-parental-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './parental-dashboard.component.html',
   styleUrls: ['./parental-dashboard.component.css']
 })
 export class ParentalDashboardComponent implements OnInit {
-  approvals: PendingApproval[] = [];
+  adventurers: AdventurerSummaryResponse[] = [];
   isLoading = true;
-  isShopFrozen = true; // Simulating that the shop is frozen due to a debuff
+  linkUsername = '';
 
   private parentalService = inject(ParentalService);
+  private toastService = inject(ToastService);
 
   ngOnInit() {
-    this.loadApprovals();
+    this.loadAdventurers();
   }
 
-  loadApprovals() {
+  loadAdventurers() {
     this.isLoading = true;
-    this.parentalService.getPendingApprovals().subscribe({
+    this.parentalService.getMyAdventurers().subscribe({
       next: (data) => {
-        this.approvals = data;
+        this.adventurers = data;
         this.isLoading = false;
       },
       error: () => this.isLoading = false
     });
   }
 
-  handleApproval(habitId: string, approved: boolean) {
-    // Optimistic UI update
-    this.approvals = this.approvals.filter(a => a.habitId !== habitId);
+  onLinkAdventurer() {
+    if (!this.linkUsername.trim()) return;
     
-    this.parentalService.approveHabit({
-      habitId,
-      childId: 'c1',
-      approved
-    }).subscribe();
+    this.parentalService.linkAdventurer(this.linkUsername).subscribe({
+      next: (data) => {
+        this.adventurers.push(data);
+        this.toastService.show(`Aventureiro ${data.username} vinculado!`, 'success');
+        this.linkUsername = '';
+      },
+      error: () => {
+        this.toastService.show('Erro ao vincular (Usuário não encontrado)', 'danger');
+      }
+    });
   }
 
-  unfreezeShop() {
-    this.isShopFrozen = false;
-    alert("A Lojinha de Alex foi descongelada com sucesso!");
+  onPardon(adventurerId: string) {
+    this.parentalService.pardonDebuff(adventurerId).subscribe({
+      next: () => {
+        const adv = this.adventurers.find(a => a.id === adventurerId);
+        if (adv) adv.debuffCounter = 0;
+        this.toastService.show('Debuffs perdoados com sucesso!', 'success');
+      },
+      error: () => {
+        this.toastService.show('Erro ao perdoar.', 'danger');
+      }
+    });
   }
 }

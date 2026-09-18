@@ -1,6 +1,9 @@
 package com.evolutto.backend.domain.user;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "users")
@@ -32,6 +35,21 @@ public class User {
     private String shopStatus = "ACTIVE";
 
     private int totalHabitsCompleted = 0;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "guardian_id")
+    @JsonIgnore
+    private User guardian;
+
+    @OneToMany(mappedBy = "guardian", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<User> adventurers = new ArrayList<>();
+
+    public User getGuardian() { return guardian; }
+    public void setGuardian(User guardian) { this.guardian = guardian; }
+
+    public List<User> getAdventurers() { return adventurers; }
+    public void setAdventurers(List<User> adventurers) { this.adventurers = adventurers; }
 
     public User() {}
 
