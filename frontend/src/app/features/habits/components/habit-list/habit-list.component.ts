@@ -46,7 +46,7 @@ export class HabitListComponent implements OnInit {
         const habit = this.habits.find(h => h.id === habitId);
         if (habit?.type === HabitType.GOOD) {
           if (res.status === 'PENDING_APPROVAL') {
-            this.toastService.show('MissÃ£o Reportada! ðŸ“œ Aguardando a avaliaÃ§Ã£o do seu GuardiÃ£o.', 'warning');
+            this.toastService.show('Miss\u00E3o Reportada! \uD83D\uDCDC', 'warning');
           } else {
             this.toastService.show('VocÃª ganhou +' + res.xpRewarded + ' XP!', 'success');
           }
