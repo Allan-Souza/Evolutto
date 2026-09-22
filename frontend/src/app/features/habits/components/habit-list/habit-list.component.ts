@@ -45,14 +45,17 @@ export class HabitListComponent implements OnInit {
         
         const habit = this.habits.find(h => h.id === habitId);
         if (habit?.type === HabitType.GOOD) {
-          this.toastService.show('Você ganhou +' + res.xpRewarded + ' XP!', 'success');
-          // Atualizar progresso das missÃƒÂµes vinculadas a este hÃƒÂ¡bito
+          if (res.status === 'PENDING_APPROVAL') {
+            this.toastService.show('MissÃ£o Reportada! ðŸ“œ Aguardando a avaliaÃ§Ã£o do seu GuardiÃ£o.', 'warning');
+          } else {
+            this.toastService.show('VocÃª ganhou +' + res.xpRewarded + ' XP!', 'success');
+          }
           this.missionService.updateProgress(habitId);
         } else {
           if (this.authService.currentRole() === 'SOLO') {
-            this.toastService.show(`VocÃƒÂª perdeu 10 XP e 10 Moedas!`, 'danger');
+            this.toastService.show('Voc\u00EA perdeu 10 XP e 10 Moedas!', 'danger');
           } else {
-            this.toastService.show(`Debuff aplicado! Penalidade ativada.`, 'danger');
+            this.toastService.show('Debuff aplicado! Penalidade ativada.', 'danger');
           }
         }
 
@@ -82,13 +85,13 @@ export class HabitListComponent implements OnInit {
           this.habits[index] = updatedHabit;
         }
         this.closeModal();
-        this.toastService.show('HÃƒÂ¡bito atualizado!', 'info');
+        this.toastService.show('HÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡bito atualizado!', 'info');
       });
     } else {
       this.habitService.createHabit(request).subscribe(newHabit => {
         this.habits = [...this.habits, newHabit];
         this.closeModal();
-        this.toastService.show('HÃƒÂ¡bito criado!', 'success');
+        this.toastService.show('HÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡bito criado!', 'success');
       });
     }
   }
@@ -102,7 +105,7 @@ export class HabitListComponent implements OnInit {
     if (this.itemToDelete) {
       this.habitService.deleteHabit(this.itemToDelete).subscribe(() => {
         this.habits = this.habits.filter(h => h.id !== this.itemToDelete);
-        this.toastService.show('Hábito enviado para aprovação do Guardião! ⏳', 'warning');
+        this.toastService.show('HÃƒÂ¡bito enviado para aprovaÃƒÂ§ÃƒÂ£o do GuardiÃƒÂ£o! Ã¢ÂÂ³', 'warning');
         this.showConfirmModal = false;
         this.itemToDelete = null;
       });
