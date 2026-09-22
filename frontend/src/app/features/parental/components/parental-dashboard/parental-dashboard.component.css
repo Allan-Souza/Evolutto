@@ -264,3 +264,40 @@
 .btn-secondary:hover {
   background: rgba(255,255,255,0.2);
 }
+/* === Responsividade (Mobile) === */
+@media screen and (max-width: 768px) {
+  /* O input de vincular e botão podem ficar empilhados se a tela for muito fina */
+  .input-group {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .link-btn {
+    width: 100%;
+  }
+
+  /* O cabeçalho do aventureiro deve empilhar o botão de Histórico embaixo dos status */
+  .approval-card > div:first-child {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 1rem;
+  }
+
+  /* Forçar o botão a ocupar a largura toda no celular para ficar mais fácil de clicar */
+  .approval-card .btn-secondary {
+    width: 100%;
+  }
+
+  /* Os status de XP e Moedas podem quebrar de linha caso fiquem apertados */
+  .stats-row {
+    flex-wrap: wrap;
+    gap: 0.5rem !important;
+  }
+
+  /* O card do Log (histórico) também deve empilhar a recompensa se apertar */
+  .log-item {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.5rem;
+  }
+}
