@@ -39,7 +39,7 @@ public class ParentalService {
             throw new RuntimeException("User is not an adventurer.");
         }
 
-        // Estabelece a ligaÃ§Ã£o
+        // Estabelece a ligaÃƒÂ§ÃƒÂ£o
         adventurer.setGuardian(guardian);
         userRepository.save(adventurer);
 
@@ -68,6 +68,7 @@ public class ParentalService {
         adventurer.setDebuffCounter(0);
         userRepository.save(adventurer);
     }
+        @Transactional
     public List<HabitLogResponse> getAdventurerLogs(String guardianId, String adventurerId) {
         User adventurer = userRepository.findById(adventurerId)
                 .orElseThrow(() -> new RuntimeException("Adventurer not found"));
@@ -78,7 +79,7 @@ public class ParentalService {
 
         return habitLogRepository.findByUserIdOrderByExecutedAtDesc(adventurerId).stream()
                 .map(HabitLogResponse::new)
-                .limit(10) // Traz apenas os 10 últimos para não sobrecarregar
+                .limit(10) // Traz apenas os 10 Ãºltimos para nÃ£o sobrecarregar
                 .collect(Collectors.toList());
     }
 }
