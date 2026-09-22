@@ -1,6 +1,8 @@
 package com.evolutto.backend.domain.parental;
 
 import com.evolutto.backend.domain.parental.dto.AdventurerSummaryResponse;
+import com.evolutto.backend.domain.parental.dto.HabitLogResponse;
+import com.evolutto.backend.domain.habit.HabitLogRepository;
 import com.evolutto.backend.domain.user.User;
 import com.evolutto.backend.domain.user.UserRepository;
 import com.evolutto.backend.domain.user.UserRole;
@@ -14,9 +16,11 @@ import java.util.stream.Collectors;
 public class ParentalService {
 
     private final UserRepository userRepository;
+    private final HabitLogRepository habitLogRepository;
 
-    public ParentalService(UserRepository userRepository) {
+    public ParentalService(UserRepository userRepository, HabitLogRepository habitLogRepository) {
         this.userRepository = userRepository;
+        this.habitLogRepository = habitLogRepository;
     }
 
     @Transactional
@@ -35,7 +39,7 @@ public class ParentalService {
             throw new RuntimeException("User is not an adventurer.");
         }
 
-        // Estabelece a ligação
+        // Estabelece a ligaÃ§Ã£o
         adventurer.setGuardian(guardian);
         userRepository.save(adventurer);
 
@@ -63,5 +67,18 @@ public class ParentalService {
         // Zera o debuff
         adventurer.setDebuffCounter(0);
         userRepository.save(adventurer);
+    }
+    public List<HabitLogResponse> getAdventurerLogs(String guardianId, String adventurerId) {
+        User adventurer = userRepository.findById(adventurerId)
+                .orElseThrow(() -> new RuntimeException("Adventurer not found"));
+
+        if (adventurer.getGuardian() == null || !adventurer.getGuardian().getId().equals(guardianId)) {
+            throw new RuntimeException("Unauthorized: You are not the guardian of this adventurer.");
+        }
+
+        return habitLogRepository.findByUserIdOrderByExecutedAtDesc(adventurerId).stream()
+                .map(HabitLogResponse::new)
+                .limit(10) // Traz apenas os 10 últimos para não sobrecarregar
+                .collect(Collectors.toList());
     }
 }

@@ -2,6 +2,7 @@ package com.evolutto.backend.controllers;
 
 import com.evolutto.backend.domain.parental.ParentalService;
 import com.evolutto.backend.domain.parental.dto.AdventurerSummaryResponse;
+import com.evolutto.backend.domain.parental.dto.HabitLogResponse;
 import com.evolutto.backend.domain.parental.dto.LinkAdventurerRequest;
 import com.evolutto.backend.domain.user.User;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +43,13 @@ public class ParentalController {
         
         parentalService.pardonDebuff(guardian.getId(), id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/adventurer/{id}/logs")
+    public ResponseEntity<List<HabitLogResponse>> getAdventurerLogs(
+            @AuthenticationPrincipal User guardian, 
+            @PathVariable String id) {
+        
+        List<HabitLogResponse> logs = parentalService.getAdventurerLogs(guardian.getId(), id);
+        return ResponseEntity.ok(logs);
     }
 }

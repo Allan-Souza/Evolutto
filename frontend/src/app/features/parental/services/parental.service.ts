@@ -2,6 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface HabitLogResponse {
+  id: string;
+  habitTitle: string;
+  executedAt: string;
+  status: string;
+  xpRewarded: number;
+  coinsRewarded: number;
+}
+
 export interface AdventurerSummaryResponse {
   id: string;
   username: string;
@@ -30,5 +39,9 @@ export class ParentalService {
 
   pardonDebuff(adventurerId: string): Observable<void> {
     return this.http.post<void>(`${this.API_URL}/adventurer/${adventurerId}/pardon`, {});
+  }
+
+  getAdventurerLogs(adventurerId: string): Observable<HabitLogResponse[]> {
+    return this.http.get<HabitLogResponse[]>(`${this.API_URL}/adventurer/${adventurerId}/logs`);
   }
 }

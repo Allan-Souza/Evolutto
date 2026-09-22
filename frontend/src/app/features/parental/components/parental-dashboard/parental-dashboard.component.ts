@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ParentalService, AdventurerSummaryResponse } from '../../services/parental.service';
+import { ParentalService, AdventurerSummaryResponse, HabitLogResponse } from '../../services/parental.service';
 import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
@@ -13,6 +13,8 @@ import { ToastService } from '../../../../core/services/toast.service';
 })
 export class ParentalDashboardComponent implements OnInit {
   adventurers: AdventurerSummaryResponse[] = [];
+  adventurerLogs: { [id: string]: HabitLogResponse[] } = {};
+  expandedAdventurer: string | null = null;
   isLoading = true;
   linkUsername = '';
 
@@ -44,7 +46,7 @@ export class ParentalDashboardComponent implements OnInit {
         this.linkUsername = '';
       },
       error: () => {
-        this.toastService.show('Erro ao vincular (Usuário não encontrado)', 'danger');
+        this.toastService.show('Erro ao vincular (UsuÃ¡rio nÃ£o encontrado)', 'danger');
       }
     });
   }
@@ -60,5 +62,23 @@ export class ParentalDashboardComponent implements OnInit {
         this.toastService.show('Erro ao perdoar.', 'danger');
       }
     });
+  }
+  toggleLogs(adventurerId: string) {
+    if (this.expandedAdventurer === adventurerId) {
+      this.expandedAdventurer = null;
+      return;
+    }
+    
+    this.expandedAdventurer = adventurerId;
+    if (!this.adventurerLogs[adventurerId]) {
+      this.parentalService.getAdventurerLogs(adventurerId).subscribe({
+        next: (logs) => {
+          this.adventurerLogs[adventurerId] = logs;
+        },
+        error: () => {
+          this.toastService.show('Erro ao carregar histórico.', 'danger');
+        }
+      });
+    }
   }
 }
