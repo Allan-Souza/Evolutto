@@ -76,7 +76,7 @@ export class ParentalDashboardComponent implements OnInit {
           this.adventurerLogs[adventurerId] = logs;
         },
         error: () => {
-          this.toastService.show('Erro ao carregar histÃ³rico.', 'danger');
+          this.toastService.show('Erro ao carregar histórico.', 'danger');
         }
       });
     }

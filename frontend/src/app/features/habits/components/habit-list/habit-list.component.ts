@@ -45,7 +45,7 @@ export class HabitListComponent implements OnInit {
         
         const habit = this.habits.find(h => h.id === habitId);
         if (habit?.type === HabitType.GOOD) {
-          this.toastService.show(`VocÃƒÂª ganhou +${res.xpRewarded} XP!`, 'success');
+          this.toastService.show('Você ganhou +' + res.xpRewarded + ' XP!', 'success');
           // Atualizar progresso das missÃƒÂµes vinculadas a este hÃƒÂ¡bito
           this.missionService.updateProgress(habitId);
         } else {
@@ -102,7 +102,7 @@ export class HabitListComponent implements OnInit {
     if (this.itemToDelete) {
       this.habitService.deleteHabit(this.itemToDelete).subscribe(() => {
         this.habits = this.habits.filter(h => h.id !== this.itemToDelete);
-        this.toastService.show('HÃƒÂ¡bito excluÃƒÂ­do.', 'warning');
+        this.toastService.show('Hábito enviado para aprovação do Guardião! ⏳', 'warning');
         this.showConfirmModal = false;
         this.itemToDelete = null;
       });
