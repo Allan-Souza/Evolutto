@@ -1,21 +1,21 @@
 <div class="parental-dashboard-container">
   <div class="header-actions">
-    <h2>Visão do Guardião</h2>
+    <h2>VisÃ£o do GuardiÃ£o</h2>
   </div>
 
   <!-- Form para vincular aventureiro Refatorado -->
   <div class="glass-panel link-panel">
     <div class="link-panel-header">
       <h3 style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
-        <span style="font-size: 1.2rem;">🔗</span> Vincular Aventureiro
+        <span style="font-size: 1.2rem;">ðŸ”—</span> Vincular Aventureiro
       </h3>
       <p class="subtitle">
-        Digite o username exato do aventureiro que você irá supervisionar.
+        Digite o username exato do aventureiro que vocÃª irÃ¡ supervisionar.
       </p>
     </div>
     <div class="input-group">
       <div class="input-wrapper">
-        <span class="input-icon">👤</span>
+        <span class="input-icon">ðŸ‘¤</span>
         <input type="text" class="rpg-input" [(ngModel)]="linkUsername" placeholder="Ex: alex_rpg" />
       </div>
       <button class="btn-primary link-btn" (click)="onLinkAdventurer()">Vincular</button>
@@ -25,11 +25,11 @@
   <h3 class="section-title">Meus Aventureiros</h3>
   
   <div *ngIf="isLoading" class="loading-state glass-panel">
-    Buscando aventureiros... ⏳
+    Buscando aventureiros... â³
   </div>
 
   <div *ngIf="!isLoading && adventurers.length === 0" class="empty-state glass-panel">
-    Você ainda não tem nenhum Aventureiro sob sua supervisão.
+    VocÃª ainda nÃ£o tem nenhum Aventureiro sob sua supervisÃ£o.
   </div>
 
   <div class="approvals-list" *ngIf="!isLoading && adventurers.length > 0">
@@ -38,33 +38,33 @@
       <!-- Linha Principal -->
       <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
         <div class="approval-info">
-          <h4 style="margin: 0; font-size: 1.2rem; color: var(--text-color);">👤 {{ adv.username }} <span class="badge level-badge">Nv. {{ adv.level }}</span></h4>
+          <h4 style="margin: 0; font-size: 1.2rem; color: var(--text-color);">ðŸ‘¤ {{ adv.username }} <span class="badge level-badge">Nv. {{ adv.level }}</span></h4>
           <div class="stats-row" style="margin-top: 0.5rem; display: flex; gap: 1rem;">
-            <span class="stat-pill xp"><span class="icon">✨</span> {{ adv.currentXp }} XP</span>
-            <span class="stat-pill coins"><span class="icon">🪙</span> {{ adv.currentCoins }}</span>
-            <span class="stat-pill habits"><span class="icon">✅</span> {{ adv.totalHabitsCompleted }} Hábitos</span>
+            <span class="stat-pill xp"><span class="icon">âœ¨</span> {{ adv.currentXp }} XP</span>
+            <span class="stat-pill coins"><span class="icon">ðŸª™</span> {{ adv.currentCoins }}</span>
+            <span class="stat-pill habits"><span class="icon">âœ…</span> {{ adv.totalHabitsCompleted }} HÃ¡bitos</span>
           </div>
         </div>
         <button class="btn-secondary" (click)="toggleLogs(adv.id)">
-          {{ expandedAdventurer === adv.id ? 'Esconder Histórico' : 'Ver Histórico' }}
+          {{ expandedAdventurer === adv.id ? 'Esconder HistÃ³rico' : 'Ver HistÃ³rico' }}
         </button>
       </div>
 
-      <!-- Alerta de Debuff e Ação de Perdoar -->
+      <!-- Alerta de Debuff e AÃ§Ã£o de Perdoar -->
       <div *ngIf="adv.debuffCounter > 0" class="debuff-alert danger-pulse" style="width: 100%; border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
         <div class="alert-content" style="display: flex; gap: 0.8rem; align-items: center;">
-          <div class="alert-icon" style="font-size: 1.5rem;">⚠️</div>
+          <div class="alert-icon" style="font-size: 1.5rem;">âš ï¸</div>
           <div class="alert-text">
             <h3 style="margin: 0; font-size: 1rem;">Aventureiro Penalizado</h3>
-            <p style="margin: 0; font-size: 0.85rem;">Possui {{ adv.debuffCounter }} hábitos ruins pendentes.</p>
+            <p style="margin: 0; font-size: 0.85rem;">Possui {{ adv.debuffCounter }} hÃ¡bitos ruins pendentes.</p>
           </div>
         </div>
         <button class="btn-primary unfreeze-btn" (click)="onPardon(adv.id)">Perdoar</button>
       </div>
 
-      <!-- Área de Histórico / Extrato -->
+      <!-- Ãrea de HistÃ³rico / Extrato -->
       <div *ngIf="expandedAdventurer === adv.id" class="history-section" style="width: 100%; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
-        <h5 style="margin: 0 0 1rem 0; color: var(--primary-color);">Últimas 10 Atividades</h5>
+        <h5 style="margin: 0 0 1rem 0; color: var(--primary-color);">Ãšltimas 10 Atividades</h5>
         
         <div *ngIf="!adventurerLogs[adv.id]" class="loading-text" style="font-size: 0.9rem; color: rgba(255,255,255,0.6);">Carregando...</div>
         <div *ngIf="adventurerLogs[adv.id]?.length === 0" class="empty-text" style="font-size: 0.9rem; color: rgba(255,255,255,0.6);">Nenhuma atividade registrada ainda.</div>
@@ -77,7 +77,7 @@
             </div>
             <div class="log-rewards" style="display: flex; gap: 0.5rem;">
               <span class="reward xp-gain" style="color: var(--success-color); font-size: 0.85rem; font-weight: 600;">+{{ log.xpRewarded }} XP</span>
-              <span class="reward coin-gain" style="color: var(--secondary-color); font-size: 0.85rem; font-weight: 600;">+{{ log.coinsRewarded }} 🪙</span>
+              <span class="reward coin-gain" style="color: var(--secondary-color); font-size: 0.85rem; font-weight: 600;">+{{ log.coinsRewarded }} ðŸª™</span>
             </div>
           </div>
         </div>

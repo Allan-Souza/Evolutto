@@ -46,7 +46,7 @@ export class ParentalDashboardComponent implements OnInit {
         this.linkUsername = '';
       },
       error: () => {
-        this.toastService.show('Erro ao vincular (UsuÃ¡rio nÃ£o encontrado)', 'danger');
+        this.toastService.show('Erro ao vincular (UsuÃƒÂ¡rio nÃƒÂ£o encontrado)', 'danger');
       }
     });
   }
@@ -76,9 +76,33 @@ export class ParentalDashboardComponent implements OnInit {
           this.adventurerLogs[adventurerId] = logs;
         },
         error: () => {
-          this.toastService.show('Erro ao carregar histórico.', 'danger');
+          this.toastService.show('Erro ao carregar histÃ³rico.', 'danger');
         }
       });
     }
+  }
+  onReviewHabit(advId: string, logId: string, approved: boolean) {
+    this.parentalService.reviewHabit(logId, approved).subscribe({
+      next: () => {
+        // Atualiza a lista otimisticamente
+        const logs = this.adventurerLogs[advId];
+        if (logs) {
+          const targetLog = logs.find(l => l.id === logId);
+          if (targetLog) {
+            targetLog.status = approved ? 'COMPLETED' : 'REJECTED';
+          }
+        }
+        
+        // Se aprovou, forçamos um recarregamento dos dados do aventureiro para pegar o novo XP/Moedas
+        if (approved) {
+          this.loadAdventurers();
+        }
+
+        this.toastService.show(approved ? 'Hábito aprovado com sucesso! ✅' : 'Hábito rejeitado. ❌', approved ? 'success' : 'danger');
+      },
+      error: () => {
+        this.toastService.show('Erro ao processar aprovação.', 'danger');
+      }
+    });
   }
 }

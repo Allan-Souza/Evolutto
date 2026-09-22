@@ -3,6 +3,8 @@ package com.evolutto.backend.domain.parental;
 import com.evolutto.backend.domain.parental.dto.AdventurerSummaryResponse;
 import com.evolutto.backend.domain.parental.dto.HabitLogResponse;
 import com.evolutto.backend.domain.habit.HabitLogRepository;
+import com.evolutto.backend.domain.habit.HabitLog;
+import com.evolutto.backend.domain.habit.LogStatus;
 import com.evolutto.backend.domain.user.User;
 import com.evolutto.backend.domain.user.UserRepository;
 import com.evolutto.backend.domain.user.UserRole;
@@ -39,7 +41,7 @@ public class ParentalService {
             throw new RuntimeException("User is not an adventurer.");
         }
 
-        // Estabelece a ligaÃƒÂ§ÃƒÂ£o
+        // Estabelece a ligaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o
         adventurer.setGuardian(guardian);
         userRepository.save(adventurer);
 
@@ -79,7 +81,45 @@ public class ParentalService {
 
         return habitLogRepository.findByUserIdOrderByExecutedAtDesc(adventurerId).stream()
                 .map(HabitLogResponse::new)
-                .limit(10) // Traz apenas os 10 Ãºltimos para nÃ£o sobrecarregar
+                .limit(10) // Traz apenas os 10 ÃƒÂºltimos para nÃƒÂ£o sobrecarregar
                 .collect(Collectors.toList());
+    }
+    @Transactional
+    public void reviewHabit(String guardianId, String logId, boolean isApproved) {
+        HabitLog log = habitLogRepository.findById(logId)
+                .orElseThrow(() -> new RuntimeException("Habit log not found"));
+
+        User adventurer = log.getUser();
+
+        if (adventurer.getGuardian() == null || !adventurer.getGuardian().getId().equals(guardianId)) {
+            throw new RuntimeException("Unauthorized: You are not the guardian of this adventurer.");
+        }
+
+        if (log.getStatus() != LogStatus.PENDING_APPROVAL) {
+            throw new RuntimeException("This log is not pending approval.");
+        }
+
+        if (isApproved) {
+            log.setStatus(LogStatus.COMPLETED);
+            
+            // Entrega os lucros retidos
+            adventurer.setCurrentXp(adventurer.getCurrentXp() + log.getXpRewarded());
+            adventurer.setCurrentCoins(adventurer.getCurrentCoins() + log.getCoinsRewarded());
+            adventurer.setTotalHabitsCompleted(adventurer.getTotalHabitsCompleted() + 1);
+
+            // Level Up Check
+            int xpTarget = adventurer.getLevel() * 1000;
+            if (adventurer.getCurrentXp() >= xpTarget) {
+                adventurer.setLevel(adventurer.getLevel() + 1);
+                adventurer.setCurrentXp(adventurer.getCurrentXp() - xpTarget);
+            }
+            
+            userRepository.save(adventurer);
+        } else {
+            // Rejeitado, ninguem ganha nada
+            log.setStatus(LogStatus.REJECTED);
+        }
+
+        habitLogRepository.save(log);
     }
 }

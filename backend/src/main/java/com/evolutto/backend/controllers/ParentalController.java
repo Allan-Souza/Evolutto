@@ -52,4 +52,13 @@ public class ParentalController {
         List<HabitLogResponse> logs = parentalService.getAdventurerLogs(guardian.getId(), id);
         return ResponseEntity.ok(logs);
     }
+    @PostMapping("/review/{logId}")
+    public ResponseEntity<Void> reviewHabit(
+            @AuthenticationPrincipal User guardian, 
+            @PathVariable String logId,
+            @RequestParam boolean approved) {
+        
+        parentalService.reviewHabit(guardian.getId(), logId, approved);
+        return ResponseEntity.ok().build();
+    }
 }

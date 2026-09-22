@@ -44,4 +44,7 @@ export class ParentalService {
   getAdventurerLogs(adventurerId: string): Observable<HabitLogResponse[]> {
     return this.http.get<HabitLogResponse[]>(`${this.API_URL}/adventurer/${adventurerId}/logs`);
   }
+  reviewHabit(logId: string, approved: boolean): Observable<void> {
+    return this.http.post<void>(`${this.API_URL}/review/${logId}?approved=${approved}`, {});
+  }
 }

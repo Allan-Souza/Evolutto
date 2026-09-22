@@ -57,8 +57,8 @@ public class HabitService {
 
         int xpRewarded = 0;
         int coinsRewarded = 0;
+        LogStatus status = LogStatus.COMPLETED;
 
-        // RPG Engine - Matriz de Recompensa
         if (habit.getType() == HabitType.GOOD) {
             habit.setStreak(habit.getStreak() + 1);
             
@@ -74,34 +74,41 @@ public class HabitService {
                 case HARD -> 15;
             };
 
-            user.setCurrentXp(user.getCurrentXp() + xpRewarded);
-            user.setCurrentCoins(user.getCurrentCoins() + coinsRewarded);
-            user.setTotalHabitsCompleted(user.getTotalHabitsCompleted() + 1);
+            if (user.getGuardian() != null) {
+                // Tem guardião -> Joga pra fila de aprovação (não entrega os lucros agora)
+                status = LogStatus.PENDING_APPROVAL;
+            } else {
+                // Não tem guardião (Solo Play) -> Entrega os lucros na hora
+                user.setCurrentXp(user.getCurrentXp() + xpRewarded);
+                user.setCurrentCoins(user.getCurrentCoins() + coinsRewarded);
+                user.setTotalHabitsCompleted(user.getTotalHabitsCompleted() + 1);
 
-            // Level Up Algorithm: Meta = NÃ­vel Atual * 1000
-            int xpTarget = user.getLevel() * 1000;
-            if (user.getCurrentXp() >= xpTarget) {
-                user.setLevel(user.getLevel() + 1);
-                user.setCurrentXp(user.getCurrentXp() - xpTarget);
+                int xpTarget = user.getLevel() * 1000;
+                if (user.getCurrentXp() >= xpTarget) {
+                    user.setLevel(user.getLevel() + 1);
+                    user.setCurrentXp(user.getCurrentXp() - xpTarget);
+                }
             }
         } else {
-            // HÃ¡bito RUIM (BAD) -> Gera Debuff
+            // Hábito RUIM (BAD) -> Gera Debuff na hora
             habit.setStreak(0);
             user.setDebuffCounter(user.getDebuffCounter() + 1);
+            status = LogStatus.COMPLETED;
         }
 
         habitRepository.save(habit);
         userRepository.save(user);
 
-        // Registro de Log (Extrato para o GuardiÃ£o ver depois)
-        HabitLog log = new HabitLog(user, habit, LocalDateTime.now(), LogStatus.COMPLETED, xpRewarded, coinsRewarded);
+        // O HabitLog guarda o XP e Moedas em potencial, se for PENDING
+        HabitLog log = new HabitLog(user, habit, LocalDateTime.now(), status, xpRewarded, coinsRewarded);
         log = habitLogRepository.save(log);
 
         ExecuteHabitResponse response = new ExecuteHabitResponse();
         response.setLogId(log.getId());
         response.setStatus(log.getStatus());
-        response.setXpRewarded(xpRewarded);
-        response.setCoinsRewarded(coinsRewarded);
+        // Se for pendente, mostramos 0 no front para nao parecer que ele ja ganhou, mas a XP está no Log
+        response.setXpRewarded(status == LogStatus.PENDING_APPROVAL ? 0 : xpRewarded);
+        response.setCoinsRewarded(status == LogStatus.PENDING_APPROVAL ? 0 : coinsRewarded);
         response.setNewTotalXp(user.getCurrentXp());
         response.setNewTotalCoins(user.getCurrentCoins());
         response.setCurrentDebuffCounter(user.getDebuffCounter());
