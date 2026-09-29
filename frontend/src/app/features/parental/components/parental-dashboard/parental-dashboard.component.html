@@ -22,16 +22,14 @@
   </div>
 
   
-  <div class="pending-deliveries" *ngIf="pendingPurchases.length > 0" style="margin-bottom: 2rem;">
-    <h3 class="section-title" style="color: #ffa500; display: flex; align-items: center; gap: 0.5rem;">🎁 Entregas Pendentes</h3>
-    <div class="delivery-card glass-panel" *ngFor="let purchase of pendingPurchases" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-left: 4px solid #ffa500;">
-      <div>
-        <h4 style="margin: 0; color: #fff;">{{ purchase.rewardTitle }}</h4>
-        <p style="margin: 0.2rem 0 0 0; font-size: 0.85rem; color: rgba(255,255,255,0.7);">
-          Comprado por: <strong style="color: var(--secondary-color)">{{ purchase.adventurerUsername }}</strong>
-        </p>
+  <div class="pending-deliveries" *ngIf="pendingPurchases.length > 0">
+    <h3 class="section-title pending-title">🎁 Entregas Pendentes</h3>
+    <div class="delivery-card glass-panel" *ngFor="let purchase of pendingPurchases">
+      <div class="delivery-info">
+        <h4>{{ purchase.rewardTitle }}</h4>
+        <p>Comprado por: <strong>{{ purchase.adventurerUsername }}</strong></p>
       </div>
-      <button class="btn-primary" style="background: var(--success-color);" (click)="onDeliverReward(purchase.id)">Marcar como Entregue ✅</button>
+      <button class="btn-success" (click)="onDeliverReward(purchase.id)">Marcar como Entregue ✅</button>
     </div>
   </div>
 
@@ -59,13 +57,9 @@
           </div>
         </div>
         
-        <div style="display: flex; gap: 0.5rem;">
-          <button class="btn-primary" style="background: var(--secondary-color);" (click)="openRewardModal(adv.id)" title="Nova Recompensa">
-            + Loja
-          </button>
-          <button class="btn-secondary" (click)="toggleLogs(adv.id)">
-            {{ expandedAdventurer === adv.id ? 'Esconder Histórico' : 'Ver Histórico' }}
-          </button>
+        <div class="adv-actions">
+          <button class="btn-secondary add-shop-btn" (click)="openRewardModal(adv.id)" title="Nova Recompensa">+ Loja</button>
+          <button class="btn-secondary" (click)="toggleLogs(adv.id)">{{ expandedAdventurer === adv.id ? 'Esconder Histórico' : 'Ver Histórico' }}</button>
         </div>
       </div>
 

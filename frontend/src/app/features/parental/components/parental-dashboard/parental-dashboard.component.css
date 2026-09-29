@@ -301,3 +301,102 @@
     gap: 0.5rem;
   }
 }
+/* === Estilos da Sessão de Entregas Pendentes === */
+.pending-deliveries {
+  margin-bottom: 2.5rem;
+}
+
+.pending-title {
+  color: #ffa500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.delivery-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1.2rem;
+  border-left: 4px solid #ffa500;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.delivery-card:hover {
+  transform: translateX(5px);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.delivery-info h4 {
+  margin: 0 0 0.2rem 0;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.delivery-info p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.delivery-info strong {
+  color: var(--secondary-color);
+}
+
+.btn-success {
+  background: var(--success-color);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-success:hover {
+  background: #0d9668;
+  transform: scale(1.02);
+}
+
+.adv-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.add-shop-btn {
+  background: rgba(255, 165, 0, 0.2) !important;
+  color: #ffa500 !important;
+  border-color: #ffa500 !important;
+}
+
+.add-shop-btn:hover {
+  background: rgba(255, 165, 0, 0.3) !important;
+}
+
+/* === Responsividade Atualizada (Mobile) === */
+@media screen and (max-width: 768px) {
+  .delivery-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .delivery-card .btn-success {
+    width: 100%;
+    text-align: center;
+  }
+
+  .adv-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .adv-actions button {
+    width: 100%;
+  }
+}
