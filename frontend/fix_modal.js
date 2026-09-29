@@ -1,4 +1,34 @@
-.modal-overlay {
+const fs = require('fs');
+
+// 1. Corrigindo o HTML do modal para renderizar acentos corretamente
+const htmlFile = 'src/app/features/parental/components/reward-form-modal/reward-form-modal.component.html';
+const htmlContent = `<div class="modal-overlay" *ngIf="show">
+  <div class="modal-content glass-panel animate-slide-up">
+    <div class="modal-header">
+      <h2>Nova Recompensa</h2>
+    </div>
+    
+    <div class="form-group">
+      <label>T\u00EDtulo da Recompensa</label>
+      <input type="text" class="rpg-input" [(ngModel)]="request.title" placeholder="Ex: Cinema com a m\u00E3e" />
+    </div>
+
+    <div class="form-group">
+      <label>Custo (Moedas \uD83E\uDE99)</label>
+      <input type="number" class="rpg-input" [(ngModel)]="request.cost" placeholder="Ex: 100" />
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="onClose()">Cancelar</button>
+      <button class="btn-primary" (click)="onSave()" [disabled]="!request.title || !request.cost">Adicionar \u00E0 Loja</button>
+    </div>
+  </div>
+</div>`;
+fs.writeFileSync(htmlFile, htmlContent, 'utf8');
+
+// 2. Aplicando o mesmo CSS elegante do modal de hábitos
+const cssFile = 'src/app/features/parental/components/reward-form-modal/reward-form-modal.component.css';
+const cssContent = `.modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.7);
@@ -101,3 +131,7 @@ input:focus {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+`;
+fs.writeFileSync(cssFile, cssContent, 'utf8');
+
+console.log("Modal style and text fixed!");
