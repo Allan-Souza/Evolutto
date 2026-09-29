@@ -1,108 +1,46 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ShopService } from '../../services/shop.service';
-import { UserStoreService } from '../../../../core/store/user-store.service';
-import { CreateRewardRequest, RewardItem, ShopResponse, ShopStatus } from '../../../../core/models/shop.model';
-import { RewardCardComponent } from '../reward-card/reward-card.component';
+import { RewardService } from '../../../../core/services/reward.service';
+import { RewardResponse } from '../../../../core/models/reward.model';
 import { ToastService } from '../../../../core/services/toast.service';
-import { RewardFormModalComponent } from '../reward-form-modal/reward-form-modal.component';
-import { NgIconComponent } from '@ng-icons/core';
-import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
+import { UserStoreService } from '../../../../core/store/user-store.service';
 
 @Component({
   selector: 'app-shop-board',
   standalone: true,
-  imports: [CommonModule, RewardCardComponent, RewardFormModalComponent, NgIconComponent, ConfirmModalComponent],
+  imports: [CommonModule],
   templateUrl: './shop-board.component.html',
   styleUrls: ['./shop-board.component.css']
 })
 export class ShopBoardComponent implements OnInit {
-  shopData: ShopResponse | null = null;
-  rewards: RewardItem[] = [];
-  status: ShopStatus = ShopStatus.ACTIVE;
-  loadingId: string | null = null;
-  showModal = false;
+  rewards: RewardResponse[] = [];
   isLoading = true;
-  rewardToEdit: RewardItem | null = null;
-  showConfirmModal = false;
-  itemToDelete: string | null = null;
-  
-  private shopService = inject(ShopService);
+  userStore = inject(UserStoreService);
+  private rewardService = inject(RewardService);
   private toastService = inject(ToastService);
-  public userStore = inject(UserStoreService);
-  public ShopStatus = ShopStatus;
 
-  ngOnInit(): void {
-    this.shopService.getShop().subscribe(data => {
-      this.status = data.status;
-      this.rewards = data.availableRewards;
-    });
-  }
-
-  onBuy(rewardId: string) {
-    this.loadingId = rewardId;
-    this.shopService.buyReward(rewardId, this.userStore.currentCoins()).subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.userStore.spendCoins(this.userStore.currentCoins() - res.newCoinBalance);
-        } else {
-          alert(res.message);
-        }
-        this.loadingId = null;
+  ngOnInit() {
+    this.rewardService.getMyRewards().subscribe({
+      next: (data) => {
+        this.rewards = data;
+        this.isLoading = false;
       },
-      error: () => this.loadingId = null
+      error: () => this.isLoading = false
     });
   }
 
-  openModal(reward?: RewardItem) {
-    if (reward) {
-      this.rewardToEdit = reward;
+  onBuy(reward: RewardResponse) {
+    if (this.userStore.currentCoins() < reward.cost) {
+      this.toastService.show('Você não tem moedas suficientes! ⛔', 'danger');
+      return;
     }
-    this.showModal = true;
-  }
 
-  closeModal() {
-    this.showModal = false;
-    this.rewardToEdit = null;
-  }
-
-  onSaveReward(request: CreateRewardRequest) {
-    if (this.rewardToEdit) {
-      this.shopService.updateReward(this.rewardToEdit.id, request).subscribe(updatedReward => {
-        const index = this.rewards.findIndex(r => r.id === updatedReward.id);
-        if (index !== -1) {
-          this.rewards[index] = updatedReward;
-        }
-        this.closeModal();
-        this.toastService.show('Recompensa atualizada!', 'info');
-      });
-    } else {
-      this.shopService.createReward(request).subscribe(newReward => {
-        this.rewards = [...this.rewards, newReward];
-        this.closeModal();
-        this.toastService.show('Recompensa criada!', 'success');
-      });
-    }
-  }
-
-  onDeleteReward(id: string) {
-    this.itemToDelete = id;
-    this.showConfirmModal = true;
-  }
-
-  onConfirmDelete() {
-    if (this.itemToDelete) {
-      this.shopService.deleteReward(this.itemToDelete).subscribe(() => {
-        this.rewards = this.rewards.filter(r => r.id !== this.itemToDelete);
-        this.toastService.show('Recompensa excluída.', 'warning');
-        this.showConfirmModal = false;
-        this.itemToDelete = null;
-      });
-    }
-  }
-
-  onCancelDelete() {
-    this.showConfirmModal = false;
-    this.itemToDelete = null;
+    this.rewardService.buyReward(reward.id).subscribe({
+      next: () => {
+        this.userStore.updateProgress(this.userStore.currentXp(), this.userStore.currentCoins() - reward.cost, this.userStore.debuffCounter());
+        this.toastService.show('Item comprado com sucesso! O Guardião foi notificado. 🎁', 'success');
+      },
+      error: () => this.toastService.show('Erro ao processar compra.', 'danger')
+    });
   }
 }

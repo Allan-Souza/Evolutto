@@ -1,40 +1,4 @@
-.shop-board-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.header-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header-actions h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.btn-sm {
-  padding: 8px 16px;
-  font-size: 0.9rem;
-}
-
-.frozen-warning {
-  padding: 16px;
-  background: rgba(59, 130, 246, 0.2);
-  border-left: 4px solid var(--primary-color);
-  color: var(--text-primary);
-  font-weight: 500;
-}
-
-.rewards-wrapper.frozen {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.empty-state {
-  padding: 32px;
-  text-align: center;
-  color: var(--text-secondary);
-}
+.shop-container { padding: 1rem; max-width: 1000px; margin: 0 auto; }
+.rewards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.reward-card { display: flex; flex-direction: column; padding: 1.5rem; border-top: 2px solid #ffa500; transition: transform 0.2s ease; }
+.reward-card:hover { transform: translateY(-5px); }

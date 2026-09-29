@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { HabitService } from '../../services/habit.service';
 import { UserStoreService } from '../../../../core/store/user-store.service';
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -13,7 +14,7 @@ import { MissionService } from '../../../missions/services/mission.service';
 @Component({
   selector: 'app-habit-list',
   standalone: true,
-  imports: [CommonModule, HabitCardComponent, HabitFormModalComponent, ConfirmModalComponent],
+  imports: [CommonModule, RouterModule, HabitCardComponent, HabitFormModalComponent, ConfirmModalComponent],
   templateUrl: './habit-list.component.html',
   styleUrls: ['./habit-list.component.css']
 })

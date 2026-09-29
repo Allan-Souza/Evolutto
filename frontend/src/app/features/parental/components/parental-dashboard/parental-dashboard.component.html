@@ -21,7 +21,22 @@
     </div>
   </div>
 
+  
+  <div class="pending-deliveries" *ngIf="pendingPurchases.length > 0" style="margin-bottom: 2rem;">
+    <h3 class="section-title" style="color: #ffa500; display: flex; align-items: center; gap: 0.5rem;">\uD83C\uDF81 Entregas Pendentes</h3>
+    <div class="delivery-card glass-panel" *ngFor="let purchase of pendingPurchases" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-left: 4px solid #ffa500;">
+      <div>
+        <h4 style="margin: 0; color: #fff;">{{ purchase.rewardTitle }}</h4>
+        <p style="margin: 0.2rem 0 0 0; font-size: 0.85rem; color: rgba(255,255,255,0.7);">
+          Comprado por: <strong style="color: var(--secondary-color)">{{ purchase.adventurerUsername }}</strong>
+        </p>
+      </div>
+      <button class="btn-primary" style="background: var(--success-color);" (click)="onDeliverReward(purchase.id)">Marcar como Entregue \u2705</button>
+    </div>
+  </div>
+
   <h3 class="section-title">Meus Aventureiros</h3>
+
   
   <div *ngIf="isLoading" class="loading-state glass-panel">
     Buscando aventureiros... ⏳
@@ -43,10 +58,17 @@
             <span class="stat-pill habits"><span class="icon">✅</span> {{ adv.totalHabitsCompleted }} Hábitos</span>
           </div>
         </div>
-        <button class="btn-secondary" (click)="toggleLogs(adv.id)">
-          {{ expandedAdventurer === adv.id ? 'Esconder Histórico' : 'Ver Histórico' }}
-        </button>
+        
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn-primary" style="background: var(--secondary-color);" (click)="openRewardModal(adv.id)" title="Nova Recompensa">
+            + Loja
+          </button>
+          <button class="btn-secondary" (click)="toggleLogs(adv.id)">
+            {{ expandedAdventurer === adv.id ? 'Esconder Hist\u00F3rico' : 'Ver Hist\u00F3rico' }}
+          </button>
+        </div>
       </div>
+
 
       <div *ngIf="adv.debuffCounter > 0" class="debuff-alert danger-pulse" style="width: 100%; border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
         <div class="alert-content" style="display: flex; gap: 0.8rem; align-items: center;">
@@ -92,3 +114,4 @@
     </div>
   </div>
 </div>
+<app-reward-form-modal [show]="showRewardModal" [adventurerId]="selectedAdvForReward" (close)="showRewardModal = false" (save)="onSaveReward($event)"></app-reward-form-modal>

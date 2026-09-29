@@ -1,0 +1,20 @@
+<div class="modal-overlay" *ngIf="show">
+  <div class="modal-content glass-panel animate-slide-up">
+    <h3>Nova Recompensa</h3>
+    
+    <div class="form-group">
+      <label>T\u00EDtulo da Recompensa</label>
+      <input type="text" class="rpg-input" [(ngModel)]="request.title" placeholder="Ex: Cinema com a m\u00E3e" />
+    </div>
+
+    <div class="form-group">
+      <label>Custo (Moedas \uD83E\uDE99)</label>
+      <input type="number" class="rpg-input" [(ngModel)]="request.cost" placeholder="Ex: 100" />
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="onClose()">Cancelar</button>
+      <button class="btn-primary" (click)="onSave()" [disabled]="!request.title || !request.cost">Adicionar \u00E0 Loja</button>
+    </div>
+  </div>
+</div>
