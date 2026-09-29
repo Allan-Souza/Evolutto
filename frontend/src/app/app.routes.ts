@@ -32,5 +32,5 @@ export const routes: Routes = [
     loadChildren: () => import('./features/parental/parental.routes').then(m => m.PARENTAL_ROUTES),
     canActivate: [authGuard, roleGuard]
   },
-  { path: '', redirectTo: '/habits', pathMatch: 'full' }
+  { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];

@@ -12,7 +12,7 @@ export class AuthService {
   private readonly API_URL = 'http://localhost:8080/api/v1/auth';
   private readonly TOKEN_KEY = 'evolutto_jwt';
 
-  private token = signal<string | null>(localStorage.getItem(this.TOKEN_KEY));
+  private token = signal<string | null>(null);
   private role = signal<string>('STANDARD');
 
   isAuthenticated(): boolean { return !!this.token(); }
@@ -23,7 +23,7 @@ export class AuthService {
   logout() { 
     this.token.set(null); 
     this.role.set('STANDARD'); 
-    localStorage.removeItem(this.TOKEN_KEY);
+    // Limpo
   }
 
   login(username: string, password: string): Observable<AuthResponse> {
@@ -42,7 +42,7 @@ export class AuthService {
 
   private handleAuthSuccess(response: AuthResponse) {
     this.token.set(response.token);
-    localStorage.setItem(this.TOKEN_KEY, response.token);
+    // Sessão temporária sem cache no localStorage (MVP)
     this.role.set(response.user.role);
     this.userStore.hydrateProfile(response.user);
   }
