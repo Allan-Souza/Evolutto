@@ -23,7 +23,7 @@
 
   
   <div class="pending-deliveries" *ngIf="pendingPurchases.length > 0" style="margin-bottom: 2rem;">
-    <h3 class="section-title" style="color: #ffa500; display: flex; align-items: center; gap: 0.5rem;">\uD83C\uDF81 Entregas Pendentes</h3>
+    <h3 class="section-title" style="color: #ffa500; display: flex; align-items: center; gap: 0.5rem;">🎁 Entregas Pendentes</h3>
     <div class="delivery-card glass-panel" *ngFor="let purchase of pendingPurchases" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-left: 4px solid #ffa500;">
       <div>
         <h4 style="margin: 0; color: #fff;">{{ purchase.rewardTitle }}</h4>
@@ -31,7 +31,7 @@
           Comprado por: <strong style="color: var(--secondary-color)">{{ purchase.adventurerUsername }}</strong>
         </p>
       </div>
-      <button class="btn-primary" style="background: var(--success-color);" (click)="onDeliverReward(purchase.id)">Marcar como Entregue \u2705</button>
+      <button class="btn-primary" style="background: var(--success-color);" (click)="onDeliverReward(purchase.id)">Marcar como Entregue ✅</button>
     </div>
   </div>
 
@@ -64,7 +64,7 @@
             + Loja
           </button>
           <button class="btn-secondary" (click)="toggleLogs(adv.id)">
-            {{ expandedAdventurer === adv.id ? 'Esconder Hist\u00F3rico' : 'Ver Hist\u00F3rico' }}
+            {{ expandedAdventurer === adv.id ? 'Esconder Histórico' : 'Ver Histórico' }}
           </button>
         </div>
       </div>

@@ -47,14 +47,14 @@ export class HabitListComponent implements OnInit {
         const habit = this.habits.find(h => h.id === habitId);
         if (habit?.type === HabitType.GOOD) {
           if (res.status === 'PENDING_APPROVAL') {
-            this.toastService.show('Miss\u00E3o Reportada! \uD83D\uDCDC', 'warning');
+            this.toastService.show('Missão Reportada! 📜', 'warning');
           } else {
             this.toastService.show('VocÃª ganhou +' + res.xpRewarded + ' XP!', 'success');
           }
           this.missionService.updateProgress(habitId);
         } else {
           if (this.authService.currentRole() === 'SOLO') {
-            this.toastService.show('Voc\u00EA perdeu 10 XP e 10 Moedas!', 'danger');
+            this.toastService.show('Você perdeu 10 XP e 10 Moedas!', 'danger');
           } else {
             this.toastService.show('Debuff aplicado! Penalidade ativada.', 'danger');
           }

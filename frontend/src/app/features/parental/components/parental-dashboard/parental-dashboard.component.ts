@@ -57,7 +57,7 @@ export class ParentalDashboardComponent implements OnInit {
   onSaveReward(request: any) {
     this.rewardService.createReward(request).subscribe({
       next: () => {
-        this.toastService.show('Recompensa adicionada \u00E0 lojinha do Aventureiro!', 'success');
+        this.toastService.show('Recompensa adicionada à lojinha do Aventureiro!', 'success');
         this.showRewardModal = false;
       },
       error: () => this.toastService.show('Erro ao criar recompensa', 'danger')
@@ -67,10 +67,10 @@ export class ParentalDashboardComponent implements OnInit {
   onDeliverReward(purchaseId: string) {
     this.rewardService.deliverReward(purchaseId).subscribe({
       next: () => {
-        this.toastService.show('Pr\u00EAmio entregue com sucesso! \u2728', 'success');
+        this.toastService.show('Prêmio entregue com sucesso! ✨', 'success');
         this.loadPendingPurchases();
       },
-      error: () => this.toastService.show('Erro ao entregar pr\u00EAmio', 'danger')
+      error: () => this.toastService.show('Erro ao entregar prêmio', 'danger')
     });
   }
 
