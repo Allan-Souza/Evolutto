@@ -1,39 +1,77 @@
 <div class="shop-container">
   <div class="shop-header">
-    <h2 style="font-size: 2rem; margin-bottom: 0;">Lojinha de Recompensas 🏪</h2>
-    <p style="color: rgba(255,255,255,0.7); margin-top: 0.5rem;">Gaste suas moedas conquistadas e resgate prêmios na vida real!</p>
+    <div class="header-top">
+      <h2>Lojinha 🏪</h2>
+      <button *ngIf="isSolo" class="btn-primary btn-sm" (click)="openModal()">
+        + Nova Recompensa
+      </button>
+    </div>
+    <p class="shop-subtitle">
+      {{ isSolo ? 'Defina seus próprios prêmios e gaste suas moedas conquistadas!' : 'Gaste suas moedas conquistadas e resgate prêmios na vida real!' }}
+    </p>
   </div>
 
   <div *ngIf="isLoading" class="loading-state glass-panel">
     Carregando prêmios... ⏳
   </div>
 
-  <div *ngIf="!isLoading && rewards.length === 0" class="empty-state glass-panel" style="text-align: center; padding: 3rem;">
-    <h3 style="margin-bottom: 0.5rem;">Sua lojinha está vazia 😢</h3>
-    <p style="color: rgba(255,255,255,0.7);">Peça ao seu Guardião para adicionar prêmios aqui!</p>
+  <div *ngIf="!isLoading && rewards.length === 0" class="empty-state glass-panel animate-slide-up">
+    <div class="empty-icon">🎁</div>
+    <h3>Sua lojinha está vazia 😢</h3>
+    <p *ngIf="!isSolo" class="empty-desc">Peça ao seu Guardião para adicionar prêmios aqui!</p>
+    <ng-container *ngIf="isSolo">
+      <p class="empty-desc">
+        Você ainda não cadastrou nenhuma recompensa. Crie seus próprios prêmios para se motivar na sua jornada!
+      </p>
+      <button class="btn-primary" (click)="openModal()">+ Criar Primeira Recompensa</button>
+    </ng-container>
   </div>
 
   <div class="rewards-grid" *ngIf="!isLoading && rewards.length > 0">
     <div class="reward-card glass-panel animate-slide-up" *ngFor="let reward of rewards">
-      <div class="card-icon" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">
+      <div class="card-top-actions" *ngIf="isSolo">
+        <button class="icon-action-btn edit-btn" (click)="openModal(reward)" title="Editar recompensa">
+          <ng-icon name="lucideEdit2"></ng-icon>
+        </button>
+        <button class="icon-action-btn delete-btn" (click)="onDeleteReward(reward.id)" title="Excluir recompensa">
+          <ng-icon name="lucideTrash2"></ng-icon>
+        </button>
+      </div>
+
+      <div class="card-icon">
         🎁
       </div>
-      <h3 style="margin: 0 0 0.5rem 0; text-align: center;">{{ reward.title }}</h3>
-      <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
+      <h3 class="reward-title">{{ reward.title }}</h3>
+      <p class="reward-desc">
         {{ reward.description || 'Sem descrição' }}
       </p>
       
-      <div class="buy-section" style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: auto;">
-        <div class="cost-badge" style="background: rgba(255,165,0,0.2); color: #ffa500; font-weight: bold; text-align: center; padding: 0.5rem; border-radius: 8px; font-size: 1.1rem;">
+      <div class="buy-section">
+        <div class="cost-badge">
           {{ reward.cost }} 🪙
         </div>
-        <button class="btn-primary" 
+        <button class="btn-primary buy-btn" 
                 [disabled]="userStore.currentCoins() < reward.cost"
-                (click)="onBuy(reward)"
-                style="width: 100%; font-weight: bold;">
-          {{ userStore.currentCoins() >= reward.cost ? 'Comprar' : 'Faltam Moedas' }}
+                (click)="onBuy(reward)">
+          {{ userStore.currentCoins() >= reward.cost ? (isSolo ? 'Resgatar' : 'Comprar') : 'Faltam Moedas' }}
         </button>
       </div>
     </div>
   </div>
+
+  <app-reward-form-modal
+    *ngIf="showModal"
+    [editData]="rewardToEdit"
+    (closeEvent)="closeModal()"
+    (saveEvent)="onSaveReward($event)">
+  </app-reward-form-modal>
+
+  <app-confirm-modal
+    *ngIf="showConfirmModal"
+    title="Excluir Recompensa"
+    message="Tem certeza que deseja remover esta recompensa da sua lojinha?"
+    confirmText="Excluir"
+    (confirm)="onConfirmDelete()"
+    (cancel)="onCancelDelete()">
+  </app-confirm-modal>
 </div>

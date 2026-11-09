@@ -49,9 +49,8 @@ export class HabitListComponent implements OnInit {
           if (res.status === 'PENDING_APPROVAL') {
             this.toastService.show('Missão Reportada! 📜', 'warning');
           } else {
-            this.toastService.show('VocÃª ganhou +' + res.xpRewarded + ' XP!', 'success');
+            this.toastService.show('Você ganhou +' + res.xpRewarded + ' XP!', 'success');
           }
-          this.missionService.updateProgress(habitId);
         } else {
           if (this.authService.currentRole() === 'SOLO') {
             this.toastService.show('Você perdeu 10 XP e 10 Moedas!', 'danger');
@@ -86,13 +85,13 @@ export class HabitListComponent implements OnInit {
           this.habits[index] = updatedHabit;
         }
         this.closeModal();
-        this.toastService.show('HÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡bito atualizado!', 'info');
+        this.toastService.show('Hábito atualizado!', 'info');
       });
     } else {
       this.habitService.createHabit(request).subscribe(newHabit => {
         this.habits = [...this.habits, newHabit];
         this.closeModal();
-        this.toastService.show('HÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡bito criado!', 'success');
+        this.toastService.show('Hábito criado!', 'success');
       });
     }
   }
@@ -106,7 +105,7 @@ export class HabitListComponent implements OnInit {
     if (this.itemToDelete) {
       this.habitService.deleteHabit(this.itemToDelete).subscribe(() => {
         this.habits = this.habits.filter(h => h.id !== this.itemToDelete);
-        this.toastService.show('HÃƒÂ¡bito enviado para aprovaÃƒÂ§ÃƒÂ£o do GuardiÃƒÂ£o! Ã¢ÂÂ³', 'warning');
+        this.toastService.show('Hábito excluído com sucesso!', 'warning');
         this.showConfirmModal = false;
         this.itemToDelete = null;
       });

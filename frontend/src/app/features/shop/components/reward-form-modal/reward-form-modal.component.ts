@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CreateRewardRequest, RewardItem } from '../../../../core/models/shop.model';
+import { RewardRequest, RewardResponse } from '../../../../core/models/reward.model';
 
 @Component({
   selector: 'app-reward-form-modal',
@@ -11,15 +11,16 @@ import { CreateRewardRequest, RewardItem } from '../../../../core/models/shop.mo
   styleUrls: ['./reward-form-modal.component.css']
 })
 export class RewardFormModalComponent implements OnInit {
-  @Input() editData?: RewardItem | null = null;
+  @Input() editData?: RewardResponse | null = null;
   @Output() closeEvent = new EventEmitter<void>();
-  @Output() saveEvent = new EventEmitter<CreateRewardRequest>();
+  @Output() saveEvent = new EventEmitter<RewardRequest>();
 
   rewardForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.rewardForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(50)]],
+      description: ['', [Validators.maxLength(120)]],
       cost: [100, [Validators.required, Validators.min(1)]],
     });
   }
@@ -28,6 +29,7 @@ export class RewardFormModalComponent implements OnInit {
     if (this.editData) {
       this.rewardForm.patchValue({
         title: this.editData.title,
+        description: this.editData.description || '',
         cost: this.editData.cost
       });
     }
@@ -35,7 +37,7 @@ export class RewardFormModalComponent implements OnInit {
 
   onSubmit() {
     if (this.rewardForm.valid) {
-      this.saveEvent.emit(this.rewardForm.value as CreateRewardRequest);
+      this.saveEvent.emit(this.rewardForm.value as RewardRequest);
     } else {
       this.rewardForm.markAllAsTouched();
     }

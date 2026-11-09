@@ -13,9 +13,13 @@ import { Mission, MissionType, MissionStatus } from '../../../../core/models/mis
 export class MissionCardComponent {
   @Input({ required: true }) mission!: Mission;
   @Input() isClaimLoading = false;
+  @Input() canManage = false;
   @Output() claim = new EventEmitter<string>();
+  @Output() edit = new EventEmitter<Mission>();
+  @Output() delete = new EventEmitter<string>();
 
   get progressPercent(): number {
+    if (!this.mission.totalSteps) return 0;
     return Math.min((this.mission.currentSteps / this.mission.totalSteps) * 100, 100);
   }
 
@@ -45,5 +49,13 @@ export class MissionCardComponent {
 
   onClaim() {
     this.claim.emit(this.mission.id);
+  }
+
+  onEdit() {
+    this.edit.emit(this.mission);
+  }
+
+  onDelete() {
+    this.delete.emit(this.mission.id);
   }
 }

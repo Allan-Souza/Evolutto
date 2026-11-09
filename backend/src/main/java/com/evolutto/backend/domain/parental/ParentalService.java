@@ -4,7 +4,11 @@ import com.evolutto.backend.domain.parental.dto.AdventurerSummaryResponse;
 import com.evolutto.backend.domain.parental.dto.HabitLogResponse;
 import com.evolutto.backend.domain.habit.HabitLogRepository;
 import com.evolutto.backend.domain.habit.HabitLog;
+import com.evolutto.backend.domain.habit.HabitRepository;
+import com.evolutto.backend.domain.habit.HabitType;
 import com.evolutto.backend.domain.habit.LogStatus;
+import com.evolutto.backend.domain.habit.dto.HabitResponse;
+import com.evolutto.backend.domain.mission.MissionService;
 import com.evolutto.backend.domain.user.User;
 import com.evolutto.backend.domain.user.UserRepository;
 import com.evolutto.backend.domain.user.UserRole;
@@ -19,10 +23,15 @@ public class ParentalService {
 
     private final UserRepository userRepository;
     private final HabitLogRepository habitLogRepository;
+    private final HabitRepository habitRepository;
+    private final MissionService missionService;
 
-    public ParentalService(UserRepository userRepository, HabitLogRepository habitLogRepository) {
+    public ParentalService(UserRepository userRepository, HabitLogRepository habitLogRepository,
+                           HabitRepository habitRepository, MissionService missionService) {
         this.userRepository = userRepository;
         this.habitLogRepository = habitLogRepository;
+        this.habitRepository = habitRepository;
+        this.missionService = missionService;
     }
 
     @Transactional
@@ -84,6 +93,20 @@ public class ParentalService {
                 .limit(10) // Traz apenas os 10 ÃƒÂºltimos para nÃƒÂ£o sobrecarregar
                 .collect(Collectors.toList());
     }
+
+    public List<HabitResponse> getAdventurerHabits(String guardianId, String adventurerId) {
+        User adventurer = userRepository.findById(adventurerId)
+                .orElseThrow(() -> new RuntimeException("Adventurer not found"));
+
+        if (adventurer.getGuardian() == null || !adventurer.getGuardian().getId().equals(guardianId)) {
+            throw new RuntimeException("Unauthorized: You are not the guardian of this adventurer.");
+        }
+
+        return habitRepository.findByUserIdAndIsActiveTrue(adventurerId).stream()
+                .filter(h -> h.getType() == HabitType.GOOD)
+                .map(HabitResponse::new)
+                .collect(Collectors.toList());
+    }
     @Transactional
     public void reviewHabit(String guardianId, String logId, boolean isApproved) {
         HabitLog log = habitLogRepository.findById(logId)
@@ -115,6 +138,10 @@ public class ParentalService {
             }
             
             userRepository.save(adventurer);
+
+            if (log.getHabit().getType() == HabitType.GOOD) {
+                missionService.incrementProgressForHabit(adventurer.getId(), log.getHabit().getId());
+            }
         } else {
             // Rejeitado, ninguem ganha nada
             log.setStatus(LogStatus.REJECTED);

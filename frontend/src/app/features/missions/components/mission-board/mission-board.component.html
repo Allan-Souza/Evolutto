@@ -1,7 +1,14 @@
 <div class="mission-board">
   <div class="page-header">
-    <h1><ng-icon name="lucideTarget"></ng-icon> Missões</h1>
-    <p class="page-subtitle">Complete hábitos para progredir nas missões e resgatar recompensas épicas!</p>
+    <div class="header-top">
+      <h1><ng-icon name="lucideTarget"></ng-icon> Missões</h1>
+      <button *ngIf="isSolo" class="btn-primary btn-sm" (click)="openModal()">
+        + Nova Missão
+      </button>
+    </div>
+    <p class="page-subtitle">
+      {{ isSolo ? 'Crie seus próprios desafios e conquiste bônus épicos de XP e moedas!' : 'Complete hábitos aprovados pelo seu Guardião para progredir nas missões!' }}
+    </p>
   </div>
 
   <!-- Loading State -->
@@ -19,8 +26,11 @@
       <app-mission-card
         *ngFor="let mission of dailyMissions"
         [mission]="mission"
+        [canManage]="isSolo"
         [isClaimLoading]="claimingId === mission.id"
-        (claim)="onClaim($event)">
+        (claim)="onClaim($event)"
+        (edit)="openModal($event)"
+        (delete)="onDeleteMission($event)">
       </app-mission-card>
     </section>
 
@@ -32,8 +42,11 @@
       <app-mission-card
         *ngFor="let mission of weeklyMissions"
         [mission]="mission"
+        [canManage]="isSolo"
         [isClaimLoading]="claimingId === mission.id"
-        (claim)="onClaim($event)">
+        (claim)="onClaim($event)"
+        (edit)="openModal($event)"
+        (delete)="onDeleteMission($event)">
       </app-mission-card>
     </section>
 
@@ -45,17 +58,41 @@
       <app-mission-card
         *ngFor="let mission of monthlyMissions"
         [mission]="mission"
+        [canManage]="isSolo"
         [isClaimLoading]="claimingId === mission.id"
-        (claim)="onClaim($event)">
+        (claim)="onClaim($event)"
+        (edit)="openModal($event)"
+        (delete)="onDeleteMission($event)">
       </app-mission-card>
     </section>
 
     <!-- Empty State -->
-    <div *ngIf="missions.length === 0" class="empty-state glass-panel">
-      <ng-icon name="lucideTarget" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 16px;"></ng-icon>
-      <h3>Nenhuma missão disponível</h3>
-      <p>Complete hábitos para desbloquear missões épicas!</p>
+    <div *ngIf="missions.length === 0" class="empty-state glass-panel animate-slide-up">
+      <ng-icon name="lucideTarget" class="empty-icon"></ng-icon>
+      <h3>Nenhuma missão ativa 🎯</h3>
+      <p *ngIf="!isSolo">Peça ao seu Guardião para criar missões especiais para você!</p>
+      <ng-container *ngIf="isSolo">
+        <p>Você ainda não criou nenhuma missão. Defina metas diárias, semanais ou mensais para turbinar sua evolução!</p>
+        <button class="btn-primary" (click)="openModal()">+ Criar Primeira Missão</button>
+      </ng-container>
     </div>
     
   </ng-container>
+
+  <app-mission-form-modal
+    *ngIf="showModal"
+    [editData]="missionToEdit"
+    [availableHabits]="goodHabits"
+    (closeEvent)="closeModal()"
+    (saveEvent)="onSaveMission($event)">
+  </app-mission-form-modal>
+
+  <app-confirm-modal
+    *ngIf="showConfirmModal"
+    title="Excluir Missão"
+    message="Tem certeza que deseja excluir esta missão?"
+    confirmText="Excluir"
+    (confirm)="onConfirmDelete()"
+    (cancel)="onCancelDelete()">
+  </app-confirm-modal>
 </div>

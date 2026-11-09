@@ -7,7 +7,7 @@ export interface RewardRequest {
   title: string;
   description: string;
   cost: number;
-  targetId: string;
+  targetId?: string;
 }
 
 export interface RewardResponse {

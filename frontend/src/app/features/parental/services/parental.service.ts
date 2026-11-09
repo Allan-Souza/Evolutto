@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { HabitResponse } from '../../../core/models/habit.model';
 
 export interface HabitLogResponse {
   id: string;
@@ -44,6 +45,11 @@ export class ParentalService {
   getAdventurerLogs(adventurerId: string): Observable<HabitLogResponse[]> {
     return this.http.get<HabitLogResponse[]>(`${this.API_URL}/adventurer/${adventurerId}/logs`);
   }
+
+  getAdventurerHabits(adventurerId: string): Observable<HabitResponse[]> {
+    return this.http.get<HabitResponse[]>(`${this.API_URL}/adventurer/${adventurerId}/habits`);
+  }
+
   reviewHabit(logId: string, approved: boolean): Observable<void> {
     return this.http.post<void>(`${this.API_URL}/review/${logId}?approved=${approved}`, {});
   }

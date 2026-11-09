@@ -22,16 +22,24 @@ public class RewardController {
         this.rewardService = rewardService;
     }
 
-    // --- Guardian Actions ---
+    // --- Reward Management (Guardian & Solo) ---
 
     @PostMapping
-    public ResponseEntity<RewardResponse> createReward(@AuthenticationPrincipal User guardian, @RequestBody RewardRequest request) {
-        return ResponseEntity.ok(rewardService.createReward(guardian.getId(), request));
+    public ResponseEntity<RewardResponse> createReward(@AuthenticationPrincipal User user, @RequestBody RewardRequest request) {
+        return ResponseEntity.ok(rewardService.createReward(user.getId(), request));
+    }
+
+    @PutMapping("/{rewardId}")
+    public ResponseEntity<RewardResponse> updateReward(
+            @AuthenticationPrincipal User user,
+            @PathVariable String rewardId,
+            @RequestBody RewardRequest request) {
+        return ResponseEntity.ok(rewardService.updateReward(user.getId(), rewardId, request));
     }
 
     @DeleteMapping("/{rewardId}")
-    public ResponseEntity<Void> deleteReward(@AuthenticationPrincipal User guardian, @PathVariable String rewardId) {
-        rewardService.deleteReward(guardian.getId(), rewardId);
+    public ResponseEntity<Void> deleteReward(@AuthenticationPrincipal User user, @PathVariable String rewardId) {
+        rewardService.deleteReward(user.getId(), rewardId);
         return ResponseEntity.ok().build();
     }
 

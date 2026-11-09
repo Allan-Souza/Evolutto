@@ -1,5 +1,9 @@
 import { RewardService } from '../../../../core/services/reward.service';
 import { PurchaseResponse, RewardRequest } from '../../../../core/models/reward.model';
+import { MissionRequest } from '../../../../core/models/mission.model';
+import { HabitResponse } from '../../../../core/models/habit.model';
+import { MissionService } from '../../../missions/services/mission.service';
+import { MissionFormModalComponent } from '../../../missions/components/mission-form-modal/mission-form-modal.component';
 import { RewardFormModalComponent } from '../reward-form-modal/reward-form-modal.component';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -10,7 +14,7 @@ import { ToastService } from '../../../../core/services/toast.service';
 @Component({
   selector: 'app-parental-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RewardFormModalComponent],
+  imports: [CommonModule, FormsModule, RewardFormModalComponent, MissionFormModalComponent],
   templateUrl: './parental-dashboard.component.html',
   styleUrls: ['./parental-dashboard.component.css']
 })
@@ -23,9 +27,13 @@ export class ParentalDashboardComponent implements OnInit {
   pendingPurchases: PurchaseResponse[] = [];
   showRewardModal = false;
   selectedAdvForReward = '';
+  showMissionModal = false;
+  selectedAdvForMission = '';
+  selectedAdvHabits: HabitResponse[] = [];
 
   private parentalService = inject(ParentalService);
   private rewardService = inject(RewardService);
+  private missionService = inject(MissionService);
   private toastService = inject(ToastService);
 
   ngOnInit() {
@@ -52,6 +60,30 @@ export class ParentalDashboardComponent implements OnInit {
   openRewardModal(advId: string) {
     this.selectedAdvForReward = advId;
     this.showRewardModal = true;
+  }
+
+  openMissionModal(advId: string) {
+    this.selectedAdvForMission = advId;
+    this.selectedAdvHabits = [];
+    this.parentalService.getAdventurerHabits(advId).subscribe({
+      next: (habits) => {
+        this.selectedAdvHabits = habits;
+        this.showMissionModal = true;
+      },
+      error: () => {
+        this.showMissionModal = true;
+      }
+    });
+  }
+
+  onSaveMission(request: MissionRequest) {
+    this.missionService.createMission(request).subscribe({
+      next: () => {
+        this.toastService.show('Missão atribuída ao Aventureiro! 🎯', 'success');
+        this.showMissionModal = false;
+      },
+      error: () => this.toastService.show('Erro ao criar missão.', 'danger')
+    });
   }
 
   onSaveReward(request: any) {

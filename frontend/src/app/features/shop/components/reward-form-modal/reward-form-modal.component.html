@@ -10,14 +10,19 @@
       
       <div class="form-group">
         <label for="title">Nome da Recompensa *</label>
-        <input type="text" id="title" formControlName="title" placeholder="Ex: Hora de Videogame" autocomplete="off" />
+        <input type="text" id="title" formControlName="title" placeholder="Ex: 1 Hora de Videogame" autocomplete="off" />
         <div class="error-msg" *ngIf="rewardForm.get('title')?.invalid && rewardForm.get('title')?.touched">
           Nome é obrigatório.
         </div>
       </div>
 
       <div class="form-group">
-        <label for="cost">Custo (Moedas) *</label>
+        <label for="description">Descrição (Opcional)</label>
+        <input type="text" id="description" formControlName="description" placeholder="Ex: Sessão livre após concluir os estudos" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label for="cost">Custo (Moedas 🪙) *</label>
         <input type="number" id="cost" formControlName="cost" min="1" placeholder="100" />
         <div class="error-msg" *ngIf="rewardForm.get('cost')?.invalid && rewardForm.get('cost')?.touched">
           O custo deve ser maior que zero.

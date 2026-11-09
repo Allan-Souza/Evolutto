@@ -1,5 +1,6 @@
 package com.evolutto.backend.controllers;
 
+import com.evolutto.backend.domain.habit.dto.HabitResponse;
 import com.evolutto.backend.domain.parental.ParentalService;
 import com.evolutto.backend.domain.parental.dto.AdventurerSummaryResponse;
 import com.evolutto.backend.domain.parental.dto.HabitLogResponse;
@@ -51,6 +52,13 @@ public class ParentalController {
         
         List<HabitLogResponse> logs = parentalService.getAdventurerLogs(guardian.getId(), id);
         return ResponseEntity.ok(logs);
+    }
+
+    @GetMapping("/adventurer/{id}/habits")
+    public ResponseEntity<List<HabitResponse>> getAdventurerHabits(
+            @AuthenticationPrincipal User guardian,
+            @PathVariable String id) {
+        return ResponseEntity.ok(parentalService.getAdventurerHabits(guardian.getId(), id));
     }
     @PostMapping("/review/{logId}")
     public ResponseEntity<Void> reviewHabit(

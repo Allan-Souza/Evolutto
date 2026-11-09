@@ -1,4 +1,4 @@
-﻿import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -10,6 +10,7 @@ export class UserStoreService {
   readonly debuffCounter = signal<number>(0);
   
   // Perfil
+  readonly userId = signal<string>('');
   readonly username = signal<string>('Aventureiro');
   readonly avatar = signal<string>('lucideUser');
   readonly totalHabitsCompleted = signal<number>(0);
@@ -64,6 +65,7 @@ export class UserStoreService {
 
   // Receives the backend user profile and populates all signals
   hydrateProfile(profile: any) {
+    this.userId.set(profile.id || '');
     this.currentXp.set(profile.currentXp);
     this.currentCoins.set(profile.currentCoins);
     this.currentLevel.set(profile.level);

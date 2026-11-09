@@ -58,6 +58,7 @@
         </div>
         
         <div class="adv-actions">
+          <button class="btn-secondary add-shop-btn" (click)="openMissionModal(adv.id)" title="Nova Missão">+ Missão</button>
           <button class="btn-secondary add-shop-btn" (click)="openRewardModal(adv.id)" title="Nova Recompensa">+ Loja</button>
           <button class="btn-secondary" (click)="toggleLogs(adv.id)">{{ expandedAdventurer === adv.id ? 'Esconder Histórico' : 'Ver Histórico' }}</button>
         </div>
@@ -109,3 +110,10 @@
   </div>
 </div>
 <app-reward-form-modal [show]="showRewardModal" [adventurerId]="selectedAdvForReward" (close)="showRewardModal = false" (save)="onSaveReward($event)"></app-reward-form-modal>
+<app-mission-form-modal
+  *ngIf="showMissionModal"
+  [availableHabits]="selectedAdvHabits"
+  [targetId]="selectedAdvForMission"
+  (closeEvent)="showMissionModal = false"
+  (saveEvent)="onSaveMission($event)">
+</app-mission-form-modal>

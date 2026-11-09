@@ -2,17 +2,27 @@
   
   <div class="card-header">
     <span class="type-badge" [ngClass]="typeBadgeClass">{{ typeLabel }}</span>
-    <div class="rewards-preview">
-      <span class="reward-tag xp-tag">+{{ mission.xpReward }} XP</span>
-      <span class="reward-tag coin-tag">
-        <ng-icon name="lucideCoins" style="font-size: 0.8rem;"></ng-icon>
-        {{ mission.coinReward }}
-      </span>
+    <div class="header-right">
+      <div class="rewards-preview">
+        <span class="reward-tag xp-tag">+{{ mission.xpReward }} XP</span>
+        <span class="reward-tag coin-tag">
+          <ng-icon name="lucideCoins" style="font-size: 0.8rem;"></ng-icon>
+          {{ mission.coinReward }}
+        </span>
+      </div>
+      <div class="card-actions" *ngIf="canManage">
+        <button class="icon-action-btn edit-btn" (click)="onEdit()" title="Editar missão">
+          <ng-icon name="lucideEdit2"></ng-icon>
+        </button>
+        <button class="icon-action-btn delete-btn" (click)="onDelete()" title="Excluir missão">
+          <ng-icon name="lucideTrash2"></ng-icon>
+        </button>
+      </div>
     </div>
   </div>
 
   <h3 class="mission-title">{{ mission.title }}</h3>
-  <p class="mission-desc">{{ mission.description }}</p>
+  <p class="mission-desc">{{ mission.description || 'Complete os hábitos vinculados para avançar.' }}</p>
 
   <div class="progress-section">
     <div class="progress-text">

@@ -5,6 +5,7 @@ import com.evolutto.backend.domain.reward.dto.RewardRequest;
 import com.evolutto.backend.domain.reward.dto.RewardResponse;
 import com.evolutto.backend.domain.user.User;
 import com.evolutto.backend.domain.user.UserRepository;
+import com.evolutto.backend.domain.user.UserRole;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +27,48 @@ public class RewardService {
     }
 
     @Transactional
-    public RewardResponse createReward(String guardianId, RewardRequest request) {
-        User guardian = userRepository.findById(guardianId).orElseThrow(() -> new RuntimeException("Guardian not found"));
-        User adventurer = userRepository.findById(request.getTargetId()).orElseThrow(() -> new RuntimeException("Adventurer not found"));
+    public RewardResponse createReward(String userId, RewardRequest request) {
+        User creator = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (adventurer.getGuardian() == null || !adventurer.getGuardian().getId().equals(guardianId)) {
+        User target;
+        if (creator.getRole() == UserRole.SOLO) {
+            if (request.getTargetId() != null && !request.getTargetId().isBlank() && !request.getTargetId().equals(creator.getId())) {
+                throw new RuntimeException("Unauthorized: Solo user can only create rewards for themselves");
+            }
+            target = creator;
+        } else if (creator.getRole() == UserRole.GUARDIAN) {
+            if (request.getTargetId() == null || request.getTargetId().isBlank()) {
+                throw new RuntimeException("Adventurer targetId is required");
+            }
+            target = userRepository.findById(request.getTargetId())
+                    .orElseThrow(() -> new RuntimeException("Adventurer not found"));
+
+            if (target.getGuardian() == null || !target.getGuardian().getId().equals(creator.getId())) {
+                throw new RuntimeException("Unauthorized");
+            }
+        } else {
+            throw new RuntimeException("Unauthorized: Only Solo users or Guardians can create rewards");
+        }
+
+        Reward reward = new Reward(creator, target, request.getTitle(), request.getDescription(), request.getCost());
+        reward = rewardRepository.save(reward);
+        return new RewardResponse(reward);
+    }
+
+    @Transactional
+    public RewardResponse updateReward(String userId, String rewardId, RewardRequest request) {
+        Reward reward = rewardRepository.findById(rewardId)
+                .orElseThrow(() -> new RuntimeException("Reward not found"));
+
+        if (!reward.getCreator().getId().equals(userId)) {
             throw new RuntimeException("Unauthorized");
         }
 
-        Reward reward = new Reward(guardian, adventurer, request.getTitle(), request.getDescription(), request.getCost());
+        reward.setTitle(request.getTitle());
+        reward.setDescription(request.getDescription());
+        reward.setCost(request.getCost());
+
         reward = rewardRepository.save(reward);
         return new RewardResponse(reward);
     }
@@ -46,9 +80,9 @@ public class RewardService {
     }
 
     @Transactional
-    public void deleteReward(String guardianId, String rewardId) {
+    public void deleteReward(String userId, String rewardId) {
         Reward reward = rewardRepository.findById(rewardId).orElseThrow(() -> new RuntimeException("Reward not found"));
-        if (!reward.getCreator().getId().equals(guardianId)) {
+        if (!reward.getCreator().getId().equals(userId)) {
             throw new RuntimeException("Unauthorized");
         }
         reward.setActive(false);
@@ -72,8 +106,12 @@ public class RewardService {
         adventurer.setCurrentCoins(adventurer.getCurrentCoins() - reward.getCost());
         userRepository.save(adventurer);
 
-        // Generate purchase
-        RewardPurchase purchase = new RewardPurchase(reward, adventurer, PurchaseStatus.PENDING_DELIVERY, LocalDateTime.now());
+        // Solo users are independent (no Guardian delivery needed)
+        PurchaseStatus initialStatus = (adventurer.getRole() == UserRole.SOLO || adventurer.getGuardian() == null)
+                ? PurchaseStatus.DELIVERED
+                : PurchaseStatus.PENDING_DELIVERY;
+
+        RewardPurchase purchase = new RewardPurchase(reward, adventurer, initialStatus, LocalDateTime.now());
         purchase = purchaseRepository.save(purchase);
 
         return new PurchaseResponse(purchase);

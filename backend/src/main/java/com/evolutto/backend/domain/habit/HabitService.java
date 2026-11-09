@@ -3,8 +3,10 @@ package com.evolutto.backend.domain.habit;
 import com.evolutto.backend.domain.habit.dto.CreateHabitRequest;
 import com.evolutto.backend.domain.habit.dto.ExecuteHabitResponse;
 import com.evolutto.backend.domain.habit.dto.HabitResponse;
+import com.evolutto.backend.domain.mission.MissionService;
 import com.evolutto.backend.domain.user.User;
 import com.evolutto.backend.domain.user.UserRepository;
+import com.evolutto.backend.domain.user.UserRole;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +20,14 @@ public class HabitService {
     private final HabitRepository habitRepository;
     private final HabitLogRepository habitLogRepository;
     private final UserRepository userRepository;
+    private final MissionService missionService;
 
-    public HabitService(HabitRepository habitRepository, HabitLogRepository habitLogRepository, UserRepository userRepository) {
+    public HabitService(HabitRepository habitRepository, HabitLogRepository habitLogRepository,
+                        UserRepository userRepository, MissionService missionService) {
         this.habitRepository = habitRepository;
         this.habitLogRepository = habitLogRepository;
         this.userRepository = userRepository;
+        this.missionService = missionService;
     }
 
     @Transactional
@@ -75,10 +80,10 @@ public class HabitService {
             };
 
             if (user.getGuardian() != null) {
-                // Tem guardião -> Joga pra fila de aprovação (não entrega os lucros agora)
+                // Tem guardião -> Joga pra fila de aprovação (não entrega os lucros nem avança missão agora)
                 status = LogStatus.PENDING_APPROVAL;
             } else {
-                // Não tem guardião (Solo Play) -> Entrega os lucros na hora
+                // Não tem guardião (Solo Play) -> Entrega os lucros e avança missões na hora
                 user.setCurrentXp(user.getCurrentXp() + xpRewarded);
                 user.setCurrentCoins(user.getCurrentCoins() + coinsRewarded);
                 user.setTotalHabitsCompleted(user.getTotalHabitsCompleted() + 1);
@@ -88,11 +93,19 @@ public class HabitService {
                     user.setLevel(user.getLevel() + 1);
                     user.setCurrentXp(user.getCurrentXp() - xpTarget);
                 }
+
+                missionService.incrementProgressForHabit(user.getId(), habit.getId());
             }
         } else {
-            // Hábito RUIM (BAD) -> Gera Debuff na hora
+            // Hábito RUIM (BAD)
             habit.setStreak(0);
-            user.setDebuffCounter(user.getDebuffCounter() + 1);
+            if (user.getRole() == UserRole.SOLO) {
+                // Lobo Solitário é independente: perde XP e Moedas diretamente (sem debuff de Guardião)
+                user.setCurrentXp(Math.max(0, user.getCurrentXp() - 10));
+                user.setCurrentCoins(Math.max(0, user.getCurrentCoins() - 10));
+            } else {
+                user.setDebuffCounter(user.getDebuffCounter() + 1);
+            }
             status = LogStatus.COMPLETED;
         }
 
